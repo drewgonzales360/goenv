@@ -1,0 +1,28 @@
+#!/bin/bash
+
+set -o errexit
+set -o errtrace
+set -o nounset
+set -o pipefail
+
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+CLEAR_COLOR='\033[0m'
+
+function fail {
+    echo -e "${RED}[error] $1${CLEAR_COLOR}"
+    exit 1
+}
+
+echo "[info] running build and test..."
+
+if ! go build &> /dev/null; then
+    fail "go build failed. review code and try again"
+fi
+
+if ! go test &> /dev/null; then
+    fail "go test failed. review code and try again"
+fi
+
+
+echo -e "${GREEN}[success] ran pre-push hook${CLEAR_COLOR}"

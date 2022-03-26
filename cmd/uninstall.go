@@ -6,7 +6,7 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-func Run(c *cli.Context) error {
+func Uninstall(c *cli.Context) error {
 	fmt.Println("Hello world!")
 	return nil
 }

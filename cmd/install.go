@@ -2,12 +2,11 @@ package cmd
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/Masterminds/semver"
-	"github.com/urfave/cli/v2"
-
 	"github.com/drewgonzales360/goenv/pkg"
+	"github.com/pkg/errors"
+	"github.com/urfave/cli/v2"
 )
 
 const (
@@ -28,17 +27,14 @@ func Install(c *cli.Context) error {
 	downloadURL := pkg.FormatDownloadURL(*goVersion)
 	filePath, err := pkg.DownloadFile(downloadURL)
 	if err != nil {
-		return fmt.Errorf("could not download go")
+		return errors.Wrap(err, "could not download go")
 	}
 
 	err = pkg.ExtractTarGz(filePath, InstallDirectory+goVersion.Original())
 	if err != nil {
-		return fmt.Errorf("could not extract go")
+		return errors.Wrap(err, "could not extract go")
 	}
 
-	if err := os.Symlink("/usr/local/bin/go", InstallDirectory+goVersion.Original()+"/bin/go"); err != nil {
-		return fmt.Errorf("could not link go")
-	}
-
+	Use(c)
 	return nil
 }

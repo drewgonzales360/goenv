@@ -11,9 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/pkg/errors"
-
 	"github.com/Masterminds/semver"
+	"github.com/pkg/errors"
 )
 
 const (
@@ -37,7 +36,13 @@ func RandomString() string {
 }
 
 func FormatDownloadURL(v semver.Version) string {
-	return fmt.Sprintf("https://go.dev/dl/go%s.linux-amd64.tar.gz", v.String())
+	urlVersion := v.String()
+	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
+	// actually inclued the last .0
+	if v.Patch() == 0 {
+		urlVersion = strings.TrimSuffix(urlVersion, ".0")
+	}
+	return fmt.Sprintf("https://go.dev/dl/go%s.linux-amd64.tar.gz", urlVersion)
 }
 
 // DownloadFile will download a url to a local file. It's efficient because it will
@@ -105,6 +110,12 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 			if _, err := io.Copy(outFile, tarReader); err != nil {
 				return errors.Wrap(err, "could not write to file")
 			}
+
+			err = os.Chmod(outFile.Name(), header.FileInfo().Mode())
+			if err != nil {
+				return errors.Wrap(err, "could not set extracted file permissions")
+			}
+
 			outFile.Close()
 
 		default:

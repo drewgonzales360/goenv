@@ -1,6 +1,6 @@
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
-SEMVER=0.0.1
+SEMVER=v0.0.2
 VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 
 # Builds target for whatever OS this is called from.

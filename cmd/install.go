@@ -13,10 +13,21 @@ const (
 	InstallDirectory string = "/usr/local/go/"
 )
 
-func Install(c *cli.Context) error {
+func InstallCommand(c *cli.Context) error {
 	version := ""
 	if c.NArg() > 0 {
 		version = c.Args().Get(0)
+	}
+
+	if err := Install(version); err != nil {
+		pkg.Fail(err.Error())
+	}
+	return nil
+}
+
+func Install(version string) error {
+	if inaccessible := pkg.CheckRW(); len(inaccessible) > 0 {
+		return fmt.Errorf(PermError, inaccessible)
 	}
 
 	goVersion, err := semver.NewVersion(version)
@@ -24,8 +35,7 @@ func Install(c *cli.Context) error {
 		return fmt.Errorf("could not parse version as a semver")
 	}
 
-	downloadURL := pkg.FormatDownloadURL(*goVersion)
-	filePath, err := pkg.DownloadFile(downloadURL)
+	filePath, err := pkg.DownloadFile(*goVersion)
 	if err != nil {
 		return errors.Wrap(err, "could not download go")
 	}
@@ -35,6 +45,5 @@ func Install(c *cli.Context) error {
 		return errors.Wrap(err, "could not extract go")
 	}
 
-	Use(c)
-	return nil
+	return Use(version)
 }

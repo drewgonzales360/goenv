@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/Masterminds/semver"
+	"github.com/briandowns/spinner"
 	"github.com/pkg/errors"
 )
 
@@ -48,20 +49,29 @@ func FormatDownloadURL(v semver.Version) string {
 // DownloadFile will download a url to a local file. It's efficient because it will
 // write as it downloads and not load the whole file into memory.
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
-func DownloadFile(url string) (string, error) {
-	// Get the data
+func DownloadFile(v semver.Version) (filepath string, err error) {
+	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
+	s.Suffix = fmt.Sprintf(" Downloading Go %s", v.Original()) // Build our new spinner
+	s.Start()                                                  // Start the spinner
+	defer s.Stop()
+
+	url := FormatDownloadURL(v)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != 200 {
+		return "", fmt.Errorf("could not dowload go - response code: %s", resp.Status)
+	}
+
 	// Create the file
 	if err := os.MkdirAll(tempDir, os.ModePerm); err != nil {
 		return "", err
 	}
 
-	filepath := fmt.Sprintf("/tmp/goenv/%s.tar.gz", RandomString())
+	filepath = fmt.Sprintf("/tmp/goenv/%s.tar.gz", RandomString())
 	out, err := os.Create(filepath)
 	if err != nil {
 		return "", err
@@ -70,10 +80,20 @@ func DownloadFile(url string) (string, error) {
 
 	// Write the body to file
 	_, err = io.Copy(out, resp.Body)
-	return filepath, err
+	if err != nil {
+		return "", err
+	}
+
+	s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v.Original())
+	return filepath, nil
 }
 
 func ExtractTarGz(tarballPath, destinationPath string) error {
+	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
+	s.Suffix = " Extracting package" // Build our new spinner
+	s.Start()                        // Start the spinner
+	defer s.Stop()
+
 	r, err := os.Open(tarballPath)
 	if err != nil {
 		return errors.Wrap(err, "could not open tarball")
@@ -125,5 +145,7 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 				header.Name))
 		}
 	}
+
+	s.FinalMSG = "✅ Extracted package\n"
 	return nil
 }

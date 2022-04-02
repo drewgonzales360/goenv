@@ -1,9 +1,14 @@
 package pkg
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/Masterminds/semver"
+)
 
 func TestEverything(t *testing.T) {
-	tarballPath, err := DownloadFile("https://go.dev/dl/go1.18.linux-amd64.tar.gz")
+
+	tarballPath, err := DownloadFile(*semver.MustParse("1.19"))
 	if err != nil {
 		t.Fatal(err)
 	}

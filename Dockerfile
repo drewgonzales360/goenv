@@ -1,7 +1,4 @@
-FROM ubuntu:latest
+FROM drewgonzales360/drew:latest
 
 COPY goenv /usr/local/bin
-
-RUN \
-    apt-get update \
-    && apt-get install -y ca-certificates
+COPY scripts/goenv-test.sh /usr/local/bin/goenv-test

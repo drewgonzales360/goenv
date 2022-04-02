@@ -6,14 +6,15 @@ import (
 	"github.com/Masterminds/semver"
 )
 
-func TestEverything(t *testing.T) {
-
-	tarballPath, err := DownloadFile(*semver.MustParse("1.19"))
+func TestDownloadAndUntar(t *testing.T) {
+	version := "1.18"
+	goVersion := semver.MustParse(version)
+	tarballPath, err := DownloadFile(*goVersion)
 	if err != nil {
 		t.Fatal(err)
 	}
 
-	if err = ExtractTarGz(tarballPath, "/tmp/goenv/go1.18"); err != nil {
+	if err = ExtractTarGz(tarballPath, "/tmp/goenv/"+version); err != nil {
 		t.Fatal(err)
 	}
 }

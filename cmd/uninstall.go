@@ -11,13 +11,13 @@ import (
 )
 
 func UninstallCommand(c *cli.Context) error {
-	version := ""
-	if c.NArg() > 0 {
-		version = c.Args().Get(0)
+	version, err := parseVersionArg(c)
+	if err != nil {
+		return err
 	}
 
 	if err := Uninstall(version); err != nil {
-		pkg.Fail(err.Error())
+		return err
 	}
 	return nil
 }

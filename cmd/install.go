@@ -9,18 +9,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const (
-	InstallDirectory string = "/usr/local/go/"
-)
-
 func InstallCommand(c *cli.Context) error {
-	version := ""
-	if c.NArg() > 0 {
-		version = c.Args().Get(0)
+	version, err := parseVersionArg(c)
+	if err != nil {
+		return err
 	}
 
 	if err := Install(version); err != nil {
-		pkg.Fail(err.Error())
+		return err
 	}
 	return nil
 }

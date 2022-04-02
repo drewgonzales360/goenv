@@ -1,10 +1,10 @@
 package main
 
 import (
-	"log"
 	"os"
 
 	"github.com/drewgonzales360/goenv/cmd"
+	"github.com/drewgonzales360/goenv/pkg"
 	"github.com/drewgonzales360/goenv/version"
 	"github.com/urfave/cli/v2"
 )
@@ -41,8 +41,9 @@ func main() {
 			},
 		},
 	}
-	err := app.Run(os.Args)
-	if err != nil {
-		log.Fatal(err)
+
+	if err := app.Run(os.Args); err != nil {
+		pkg.Fail(err.Error())
+		os.Exit(1)
 	}
 }

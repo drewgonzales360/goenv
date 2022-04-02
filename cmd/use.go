@@ -12,19 +12,14 @@ import (
 	"github.com/urfave/cli/v2"
 )
 
-const (
-	UsrLocalBin string = "/usr/local/bin/"
-	PermError   string = "are you sure you're root? you do not have access to %v"
-)
-
 func UseCommand(c *cli.Context) error {
-	version := ""
-	if c.NArg() > 0 {
-		version = c.Args().Get(0)
+	version, err := parseVersionArg(c)
+	if err != nil {
+		return err
 	}
 
 	if err := Use(version); err != nil {
-		pkg.Fail(err.Error())
+		return err
 	}
 	return nil
 }
@@ -39,15 +34,15 @@ func Use(version string) error {
 		return errors.Wrap(err, "could not parse version as a semver")
 	}
 
-	if err = Link(goVersion, "go"); err != nil {
+	if err = link(goVersion, "go"); err != nil {
 		return err
 	}
 
-	if err = Link(goVersion, "gofmt"); err != nil {
+	if err = link(goVersion, "gofmt"); err != nil {
 		return err
 	}
 
-	output, err := exec.Command("/usr/local/bin/go", "version").Output()
+	output, err := exec.Command(UsrLocalBin+"go", "version").Output()
 	if err != nil {
 		pkg.Debug(err.Error())
 		return err
@@ -57,7 +52,7 @@ func Use(version string) error {
 	return nil
 }
 
-func Link(goVersion *semver.Version, binary string) error {
+func link(goVersion *semver.Version, binary string) error {
 	usrLocalBinSymlink := UsrLocalBin + binary
 	if _, err := os.Stat(usrLocalBinSymlink); err == nil {
 		if err = os.Remove(usrLocalBinSymlink); err != nil {

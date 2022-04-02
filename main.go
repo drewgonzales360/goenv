@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/drewgonzales360/goenv/cmd"
@@ -11,31 +12,41 @@ import (
 
 func main() {
 	app := &cli.App{
-		Name:    version.AppName,
-		Usage:   "Manages multiple go versions for linux",
-		Version: version.Version().Original(),
+		Name: version.AppName,
+		Authors: []*cli.Author{
+			{
+				Name:  "Drew Gonzales",
+				Email: "github.com/drewgonzales360",
+			},
+		},
+		Version:   version.Version().Original(),
+		Usage:     "Manages multiple go versions for linux. See https://go.dev/dl for available versions.",
+		UsageText: fmt.Sprintf("%s <command> [version]", version.AppName),
 		Commands: []*cli.Command{
 			{
-				Name:    "install",
-				Usage:   "install a go version",
-				Aliases: []string{"i"},
-				Action:  cmd.InstallCommand,
+				Name:      "install",
+				Usage:     "Install a go version. Usually in the form 1.18, 1.9, 1.17.8.",
+				UsageText: fmt.Sprintf("%s install [version]", version.AppName),
+				Aliases:   []string{"i"},
+				Action:    cmd.InstallCommand,
 			},
 			{
-				Name:    "uninstall",
-				Usage:   "uninstall a go version",
-				Aliases: []string{"rm"},
-				Action:  cmd.UninstallCommand,
+				Name:      "uninstall",
+				Usage:     "Uninstall a go version",
+				UsageText: fmt.Sprintf("%s uninstall [version]", version.AppName),
+				Aliases:   []string{"rm"},
+				Action:    cmd.UninstallCommand,
 			},
 			{
-				Name:    "use",
-				Usage:   "use a go version",
-				Aliases: []string{"u"},
-				Action:  cmd.UseCommand,
+				Name:      "use",
+				Usage:     "Use a go version",
+				UsageText: fmt.Sprintf("%s use [version]", version.AppName),
+				Aliases:   []string{"u"},
+				Action:    cmd.UseCommand,
 			},
 			{
 				Name:    "list",
-				Usage:   "list all available go versions",
+				Usage:   "List all available go versions",
 				Aliases: []string{"ls", "l"},
 				Action:  cmd.ListCommand,
 			},

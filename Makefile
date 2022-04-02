@@ -26,10 +26,14 @@ it:
 # This creates a github release, but requires the caller to be properly authenticated
 # Only I, drewgonzales360, can create releases right now.
 release: build-linux
-	@mkdir tmp > /dev/null || true
-	tar -cvzf tmp/goenv_amd64_${SEMVER}.tar.gz ./goenv
-	gh release create ${SEMVER} "tmp/goenv_amd64_${SEMVER}.tar.gz#goenv-amd64-${SEMVER}.tar.gz" --notes "Release ${VERSION}"
+	@if ! [ -d tmp ]; then mkdir tmp; fi
+	@tar -czf tmp/goenv-amd64-${SEMVER}.tar.gz ./goenv
+	gh release create ${SEMVER} "tmp/goenv-amd64-${SEMVER}.tar.gz" --notes "Release ${VERSION}"
 
 # Turns on some hooks to check format and build status before commiting/pushing. Optional, but helpful.
 githooks:
 	git config --local core.hooksPath .githooks/
+
+clean:
+	@if [ -d tmp ]; then rm -rf tmp; fi
+	@if [ -f tmp ]; then rm goenv; fi

@@ -1,6 +1,6 @@
 # goenv
 
-![example workflow](https://github.com/drewgonzales360/goenv/actions/workflows/github-actions.yml/badge.svg)
+![github workflow](https://github.com/drewgonzales360/goenv/actions/workflows/github-actions.yml/badge.svg)
 
 goenv is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website. There are several other implementations that have much more support. This has fewer features by design.
 
@@ -8,17 +8,17 @@ goenv is an small, simple binary that executes the [install instructions](https:
 
 See the "Releases" page and download the latest release.
 
-```shell
+```bash
 curl -sSLO https://github.com/drewgonzales/goenv/releases/${SEMVER}/
 tar -xzvf goenv-amd64-${SEMVER}.tar.gz
 mv goenv /usr/local/bin
 ```
 
-## Use
+## Usage
 
 Calling `goenv` without any arguments will print out a helpful block of text, but here are a few useful examples.
 
-```shell
+```bash
 # Install and use a go version
 goenv install 1.14
 

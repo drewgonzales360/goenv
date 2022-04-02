@@ -7,7 +7,7 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
-	"github.com/drewgonzales360/goenv/pkg"
+	"github.com/drewgonzales360/goenv/internal/pkg"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 )

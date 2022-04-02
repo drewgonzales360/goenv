@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/drewgonzales360/goenv/cmd"
-	"github.com/drewgonzales360/goenv/pkg"
+	"github.com/drewgonzales360/goenv/internal/cmd"
+	"github.com/drewgonzales360/goenv/internal/pkg"
 	"github.com/drewgonzales360/goenv/version"
 	"github.com/urfave/cli/v2"
 )
@@ -51,6 +51,7 @@ func main() {
 				Action:  cmd.ListCommand,
 			},
 		},
+		HideHelpCommand: true,
 	}
 
 	if err := app.Run(os.Args); err != nil {

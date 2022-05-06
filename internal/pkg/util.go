@@ -8,6 +8,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"runtime"
 	"strings"
 	"time"
 
@@ -43,7 +44,19 @@ func FormatDownloadURL(v semver.Version) string {
 	if v.Patch() == 0 {
 		urlVersion = strings.TrimSuffix(urlVersion, ".0")
 	}
-	return fmt.Sprintf("https://go.dev/dl/go%s.linux-amd64.tar.gz", urlVersion)
+
+	os := runtime.GOOS
+	arch := runtime.GOARCH
+	if os != "linux" && os != "darwin" {
+		Debug(fmt.Sprintf("Running an unsupported os: %s", os))
+	}
+	if arch != "amd64" {
+		Debug(fmt.Sprintf("Running an unsupported arch: %s", arch))
+	}
+
+	url := fmt.Sprintf("https://go.dev/dl/go%s.%s-%s.tar.gz", urlVersion, os, arch)
+	Debug(fmt.Sprintf("Downloading %s", url))
+	return url
 }
 
 // DownloadFile will download a url to a local file. It's efficient because it will

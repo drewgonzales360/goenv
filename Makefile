@@ -7,21 +7,24 @@ VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 build:
 	@go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
 
+install:
+	@go install -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+
 # Builds it for linux
 build-linux:
-	@GOOS=linux go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+	GOOS=linux go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
 
 image: build-linux
-	@docker build -t goenv .
+	docker build -t goenv .
 
 # Runs a script to test basic, happy-path functionality inside the container
 test: image
-	@docker run --rm -it --entrypoint bash goenv goenv-test
+	@docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint bash goenv goenv-test
 
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions
 # is much safer in the container than it is on your local machine. It is short for interactive.
-it:
-	@docker run --rm -it goenv
+it: image
+	docker run --rm -it -e GOENV_LOG=DEBUG goenv
 
 # This creates a github release, but requires the caller to be properly authenticated
 # Only I, drewgonzales360, can create releases right now.

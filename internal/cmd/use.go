@@ -34,15 +34,11 @@ func Use(version string) error {
 		return errors.Wrap(err, "could not parse version as a semver")
 	}
 
-	if err = link(goVersion, "go"); err != nil {
+	if err = link(goVersion); err != nil {
 		return err
 	}
 
-	if err = link(goVersion, "gofmt"); err != nil {
-		return err
-	}
-
-	output, err := exec.Command(UsrLocalBin+"go", "version").Output()
+	output, err := exec.Command(UsrLocalGo+"/bin/go", "version").Output()
 	if err != nil {
 		pkg.Debug(err.Error())
 		return err
@@ -52,22 +48,21 @@ func Use(version string) error {
 	return nil
 }
 
-func link(goVersion *semver.Version, binary string) error {
-	usrLocalBinSymlink := UsrLocalBin + binary
-	if _, err := os.Stat(usrLocalBinSymlink); err == nil {
-		if err = os.Remove(usrLocalBinSymlink); err != nil {
-			return errors.Wrap(err, "could not remove "+usrLocalBinSymlink)
+func link(goVersion *semver.Version) error {
+	if _, err := os.Stat(UsrLocalGo); err == nil {
+		if err = os.Remove(UsrLocalGo); err != nil {
+			return errors.Wrap(err, "could not remove "+UsrLocalGo)
 		}
 	}
 
-	usrLocalGoVersionBin := InstallDirectory + goVersion.Original() + "/bin/" + binary
-	if _, err := os.Stat(usrLocalGoVersionBin); err != nil {
+	usrLocalGoVersion := InstallDirectory + goVersion.Original()
+	if _, err := os.Stat(usrLocalGoVersion); err != nil {
 		pkg.Debug(err.Error())
 		return fmt.Errorf("could not find go version %s. goenv install %s", goVersion.Original(), goVersion.Original())
 	}
 
-	if err := os.Symlink(usrLocalGoVersionBin, usrLocalBinSymlink); err != nil {
-		return errors.Wrap(err, "could not link "+binary)
+	if err := os.Symlink(usrLocalGoVersion, UsrLocalGo); err != nil {
+		return errors.Wrap(err, "could not link")
 	}
 
 	return nil

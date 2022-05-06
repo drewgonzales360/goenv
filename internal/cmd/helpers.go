@@ -7,9 +7,9 @@ import (
 )
 
 const (
-	UsrLocalBin      string = "/usr/local/bin/"
+	UsrLocalGo       string = "/usr/local/go"
 	PermError        string = "are you sure you're root? you do not have access to %v"
-	InstallDirectory string = "/usr/local/go/"
+	InstallDirectory string = "/usr/local/goenv/"
 )
 
 func parseVersionArg(c *cli.Context) (string, error) {

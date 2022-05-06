@@ -4,14 +4,8 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/Masterminds/semver"
 	"github.com/urfave/cli/v2"
 )
-
-type versionRange struct {
-	minVerson semver.Version
-	maxVerson semver.Version
-}
 
 var goVersion map[string][]string = map[string][]string{
 	"1.18": {

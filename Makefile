@@ -8,7 +8,7 @@ build:
 	@go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
 
 install:
-	@go install -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+	mv goenv /usr/local/bin
 
 # Builds it for linux
 build-linux:

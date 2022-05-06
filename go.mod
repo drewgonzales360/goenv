@@ -1,6 +1,6 @@
 module github.com/drewgonzales360/goenv
 
-go 1.17
+go 1.16
 
 require (
 	github.com/Masterminds/semver v1.5.0

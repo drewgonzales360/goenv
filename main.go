@@ -48,7 +48,13 @@ func main() {
 				Name:    "list",
 				Usage:   "List all available go versions",
 				Aliases: []string{"ls", "l"},
-				Action:  cmd.ListCommand,
+				Flags: []cli.Flag{
+					&cli.BoolFlag{
+						Name:    "available",
+						Aliases: []string{"a"},
+					},
+				},
+				Action: cmd.ListCommand,
 			},
 		},
 		HideHelpCommand: true,

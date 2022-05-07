@@ -1,25 +1,27 @@
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
-SEMVER=v0.0.2
+SEMVER=v0.0.3
 VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 
 # Builds target for whatever OS this is called from.
 build:
-	@go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+	go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
 
 install:
 	mv goenv /usr/local/bin
 
-# Builds it for linux
 build-linux:
 	GOOS=linux go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+
+build-darwin:
+	GOOS=darwin go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
 
 image: build-linux
 	docker build -t goenv .
 
 # Runs a script to test basic, happy-path functionality inside the container
 test: image
-	@docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint bash goenv goenv-test
+	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint bash goenv goenv-test
 
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions
 # is much safer in the container than it is on your local machine. It is short for interactive.
@@ -28,10 +30,14 @@ it: image
 
 # This creates a github release, but requires the caller to be properly authenticated
 # Only I, drewgonzales360, can create releases right now.
-release: build-linux
+release:
 	@if ! [ -d tmp ]; then mkdir tmp; fi
-	@tar -czf tmp/goenv-amd64-${SEMVER}.tar.gz ./goenv
-	gh release create ${SEMVER} "tmp/goenv-amd64-${SEMVER}.tar.gz" --notes "Release ${VERSION}"
+	@GOOS=linux make build
+	@tar -czf tmp/goenv-linux-amd64-${SEMVER}.tar.gz ./goenv
+	@GOOS=darwin make build
+	@tar -czf tmp/goenv-darwin-amd64-${SEMVER}.tar.gz ./goenv
+	@git tag ${SEMVER}
+	gh release create --notes "Release ${VERSION}" --target main ${SEMVER} tmp/goenv-*-amd64-${SEMVER}.tar.gz
 
 # Turns on some hooks to check format and build status before commiting/pushing. Optional, but helpful.
 githooks:
@@ -39,4 +45,4 @@ githooks:
 
 clean:
 	@if [ -d tmp ]; then rm -rf tmp; fi
-	@if [ -f tmp ]; then rm goenv; fi
+	@if [ -f goenv ]; then rm goenv; fi

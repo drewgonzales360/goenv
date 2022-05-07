@@ -2,7 +2,7 @@
 
 ![github workflow](https://github.com/drewgonzales360/goenv/actions/workflows/github-actions.yml/badge.svg)
 
-goenv is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website. There are several other implementations that have much more support. This has fewer features by design.
+goenv is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website and manages several Go versions. There are several other implementations that have much more support, but this has fewer features by design.
 
 ## Install
 

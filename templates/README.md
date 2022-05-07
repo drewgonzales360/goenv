@@ -10,12 +10,12 @@ See the "Releases" page and download the latest release.
 
 ```bash
 # Linux
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/v0.0.3/goenv-linux-amd64-v0.0.3.tar.gz -o /tmp/goenv-v0.0.3.tar.gz
+curl -sSL https://github.com/drewgonzales360/goenv/releases/download/${SEMVER}/goenv-linux-amd64-${SEMVER}.tar.gz -o /tmp/goenv-${SEMVER}.tar.gz
 
 # Mac
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/v0.0.3/goenv-darwin-amd64-v0.0.3.tar.gz -o /tmp/goenv-v0.0.3.tar.gz
+curl -sSL https://github.com/drewgonzales360/goenv/releases/download/${SEMVER}/goenv-darwin-amd64-${SEMVER}.tar.gz -o /tmp/goenv-${SEMVER}.tar.gz
 
-tar -xzvf /tmp/goenv-v0.0.3.tar.gz -C /tmp
+tar -xzvf /tmp/goenv-${SEMVER}.tar.gz -C /tmp
 mv /tmp/goenv /usr/local/bin
 ```
 

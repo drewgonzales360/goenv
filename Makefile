@@ -1,3 +1,4 @@
+.EXPORT_ALL_VARIABLES:
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
 SEMVER=v0.0.3
@@ -38,6 +39,9 @@ release:
 	@tar -czf tmp/goenv-darwin-amd64-${SEMVER}.tar.gz ./goenv
 	@git tag ${SEMVER}
 	gh release create --notes "Release ${VERSION}" --target main ${SEMVER} tmp/goenv-*-amd64-${SEMVER}.tar.gz
+
+readme:
+	envsubst < templates/README.md > README.md
 
 # Turns on some hooks to check format and build status before commiting/pushing. Optional, but helpful.
 githooks:

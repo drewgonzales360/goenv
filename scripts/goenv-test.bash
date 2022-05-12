@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Not setting any errtrace, pipefails, or errexits so we can run through this.
 # Errors are expected.

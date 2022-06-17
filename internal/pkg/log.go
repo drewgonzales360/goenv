@@ -1,27 +1,22 @@
 package pkg
 
 import (
-	"fmt"
 	"os"
-)
 
-const (
-	colorRed   string = "\033[31m"
-	colorGreen string = "\033[32m"
-	colorReset string = "\033[0m"
+	"github.com/fatih/color"
 )
 
 func Success(mesg string) {
-	fmt.Printf("😎 %s%s%s\n", colorGreen, mesg, colorReset)
+	color.Green("😎 %s", mesg)
 }
 
 func Fail(mesg string) {
-	fmt.Printf("😭 %s%s%s\n", colorRed, mesg, colorReset)
+	color.Red("😭 %s", mesg)
 }
 
 func Debug(mesg string) {
 	logLevel := os.Getenv("GOENV_LOG")
 	if logLevel == "DEBUG" {
-		fmt.Printf("🤔 %s%s%s\n", colorRed, mesg, colorReset)
+		color.Blue("🤔 %s", mesg)
 	}
 }

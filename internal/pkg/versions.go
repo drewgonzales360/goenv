@@ -2,6 +2,7 @@ package pkg
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/Masterminds/semver"
 	"github.com/fatih/color"
@@ -37,7 +38,7 @@ func Print(g *GoVersionList) {
 		for _, p := range patchVersions {
 			patches = append(patches, p.Version)
 		}
-		fmt.Println(patches)
+		fmt.Println(strings.Join(patches, " "))
 	}
 }
 

@@ -3,6 +3,8 @@ package pkg
 import (
 	"archive/tar"
 	"compress/gzip"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"math/rand"
@@ -97,8 +99,30 @@ func DownloadFile(v semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
+	if ok, err := checkHash(filepath, getHash(v)); err != nil || !ok {
+		return "", err
+	}
+
 	s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v.Original())
 	return filepath, nil
+}
+
+func checkHash(file string, expected string) (bool, error) {
+	if expected == "" {
+		return true, nil
+	}
+	out, err := os.ReadFile(file)
+	if err != nil {
+		return false, err
+	}
+
+	sum := sha256.Sum256(out)
+	downloaded := hex.EncodeToString(sum[:])
+	if downloaded != expected {
+		return false, fmt.Errorf("file corrupted, downloaded: %s, expected %s", downloaded, expected)
+	}
+
+	return true, nil
 }
 
 func ExtractTarGz(tarballPath, destinationPath string) error {

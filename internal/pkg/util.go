@@ -3,6 +3,8 @@ package pkg
 import (
 	"archive/tar"
 	"compress/gzip"
+	"crypto/sha256"
+	"encoding/hex"
 	"fmt"
 	"io"
 	"math/rand"
@@ -97,8 +99,35 @@ func DownloadFile(v semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
+	if ok, err := checkHash(filepath, getHash(v)); err != nil || !ok {
+		return "", err
+	}
+
 	s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v.Original())
 	return filepath, nil
+}
+
+// checkHash will check if the hash of the file matches the hash advertised on
+// go.dev/dl. If we have the hash written down in our code, we'll check it against
+// what we downloaded. If we haven't put the hash in, this won't throw an error.
+// This way, we don't _have_ to update every time a new version comes out. We
+// just won't check the hash.
+func checkHash(file string, expected string) (bool, error) {
+	if expected == "" {
+		return true, nil
+	}
+	out, err := os.ReadFile(file)
+	if err != nil {
+		return false, err
+	}
+
+	sum := sha256.Sum256(out)
+	downloaded := hex.EncodeToString(sum[:])
+	if downloaded != expected {
+		return false, fmt.Errorf("file corrupted, downloaded: %s, expected %s", downloaded, expected)
+	}
+
+	return true, nil
 }
 
 func ExtractTarGz(tarballPath, destinationPath string) error {

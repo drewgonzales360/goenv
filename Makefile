@@ -6,16 +6,16 @@ VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 
 # Builds target for whatever OS this is called from.
 build:
-	go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+	go build -ldflags="-X 'main.Semver=${VERSION}'"
 
 install:
 	mv goenv /usr/local/bin
 
 build-linux:
-	GOOS=linux go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+	GOOS=linux go build -ldflags="-X 'main.Semver=${VERSION}'"
 
 build-darwin:
-	GOOS=darwin go build -ldflags="-X 'github.com/drewgonzales360/goenv/version.Semver=${VERSION}'"
+	GOOS=darwin go build -ldflags="-X 'main.Semver=${VERSION}'"
 
 # Runs a script to test basic, happy-path functionality inside the container
 test-ubuntu: build-linux

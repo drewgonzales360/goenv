@@ -16,7 +16,7 @@ func TestShasumsAreAccurate(t *testing.T) {
 		for version := range v {
 			_, err := pkg.DownloadFile(*semver.MustParse(version))
 			if err != nil {
-				t.Logf("couldn't download %s", version)
+				t.Logf("couldn't download %s: %s", version, err.Error())
 				t.Fail()
 			}
 		}

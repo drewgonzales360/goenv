@@ -13,5 +13,8 @@ jobs:
       with:
         go-version: 1.18
 
-    - name: Run pre-commit hook
+    - name: Check Build and fmt
       run: ./.githooks/pre-commit
+
+    - name: Test
+      run: go test -timeout 30m ./...

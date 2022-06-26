@@ -1,0 +1,20 @@
+FROM alpine:3.15.4
+
+ENV PATH=/usr/local/go/bin:$PATH
+COPY goenv /usr/local/bin
+COPY scripts/goenv-test.sh /usr/local/bin/goenv-test
+
+
+# The Go binary is not statically linked
+# $ ldd /usr/local/go/bin/go
+#    /lib64/ld-linux-x86-64.so.2 (0x7efe14cec000)
+#    libpthread.so.0 => /lib64/ld-linux-x86-64.so.2 (0x7efe14cec000)
+#    libc.so.6 => /lib64/ld-linux-x86-64.so.2 (0x7efe14cec000)
+# The alpine images don't come with gcompat installed, which has these
+# dlls.
+RUN \
+    apk update && apk add sudo gcompat && \
+    adduser -D -h /home/drew drew && \
+    echo "drew ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+USER drew

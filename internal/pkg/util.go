@@ -107,6 +107,11 @@ func DownloadFile(v semver.Version) (filepath string, err error) {
 	return filepath, nil
 }
 
+// checkHash will check if the hash of the file matches the hash advertised on
+// go.dev/dl. If we have the hash written down in our code, we'll check it against
+// what we downloaded. If we haven't put the hash in, this won't throw an error.
+// This way, we don't _have_ to update every time a new version comes out. We
+// just won't check the hash.
 func checkHash(file string, expected string) (bool, error) {
 	if expected == "" {
 		return true, nil

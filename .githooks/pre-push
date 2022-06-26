@@ -20,7 +20,7 @@ if ! go build &> /dev/null; then
     fail "go build failed. review code and try again"
 fi
 
-if ! go test &> /dev/null; then
+if ! go test ./... &> /dev/null; then
     fail "go test failed. review code and try again"
 fi
 

@@ -42,7 +42,7 @@ func Print(g *GoVersionList) {
 	}
 }
 
-func getHash(v semver.Version) string {
+func GetHash(v *semver.Version) string {
 	majorMinor := fmt.Sprintf("%d.%d", v.Major(), v.Minor())
 
 	d, ok := GoVersions[majorMinor][v.Original()]

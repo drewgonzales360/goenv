@@ -14,7 +14,13 @@ import (
 func TestShasumsAreAccurate(t *testing.T) {
 	for _, v := range pkg.GoVersions {
 		for version := range v {
-			_, err := pkg.DownloadFile(*semver.MustParse(version))
+			v := semver.MustParse(version)
+			// If we don't know the hash, don't test the download.
+			if pkg.GetHash(v) == "" {
+				continue
+			}
+
+			_, err := pkg.DownloadFile(v)
 			if err != nil {
 				t.Logf("couldn't download %s: %s", version, err.Error())
 				t.Fail()

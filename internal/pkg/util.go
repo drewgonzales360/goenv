@@ -39,7 +39,7 @@ func RandomString() string {
 	return StringWithCharset(8, charset)
 }
 
-func FormatDownloadURL(v semver.Version) string {
+func FormatDownloadURL(v *semver.Version) string {
 	urlVersion := v.String()
 	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
 	// actually inclued the last .0
@@ -64,7 +64,7 @@ func FormatDownloadURL(v semver.Version) string {
 // DownloadFile will download a url to a local file. It's efficient because it will
 // write as it downloads and not load the whole file into memory.
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
-func DownloadFile(v semver.Version) (filepath string, err error) {
+func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
 	s.Suffix = fmt.Sprintf(" Downloading Go %s", v.Original()) // Build our new spinner
 	s.Start()                                                  // Start the spinner
@@ -99,7 +99,7 @@ func DownloadFile(v semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
-	if ok, err := checkHash(filepath, getHash(v)); err != nil || !ok {
+	if ok, err := checkHash(filepath, GetHash(v)); err != nil || !ok {
 		return "", err
 	}
 

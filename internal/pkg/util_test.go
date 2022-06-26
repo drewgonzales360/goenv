@@ -10,7 +10,7 @@ import (
 func TestDownloadAndUntar(t *testing.T) {
 	version := "1.18"
 	goVersion := semver.MustParse(version)
-	tarballPath, err := pkg.DownloadFile(*goVersion)
+	tarballPath, err := pkg.DownloadFile(goVersion)
 	if err != nil {
 		t.Fatal(err)
 	}

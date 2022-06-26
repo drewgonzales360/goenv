@@ -31,7 +31,7 @@ func Install(version string) error {
 		return fmt.Errorf("could not parse version as a semver")
 	}
 
-	filePath, err := pkg.DownloadFile(*goVersion)
+	filePath, err := pkg.DownloadFile(goVersion)
 	if err != nil {
 		return errors.Wrap(err, "could not download go")
 	}

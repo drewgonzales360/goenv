@@ -4,43 +4,48 @@ import (
 	"fmt"
 	"os"
 
+	"github.com/Masterminds/semver"
 	"github.com/drewgonzales360/goenv/internal/cmd"
 	"github.com/drewgonzales360/goenv/internal/pkg"
-	"github.com/drewgonzales360/goenv/version"
 	"github.com/urfave/cli/v2"
 )
 
+const AppName = "goenv"
+
+// Version semvers the app
+var Semver string = "unknown; please create an issue for the maintainers"
+
 func main() {
 	app := &cli.App{
-		Name: version.AppName,
+		Name: AppName,
 		Authors: []*cli.Author{
 			{
 				Name:  "Drew Gonzales",
 				Email: "github.com/drewgonzales360",
 			},
 		},
-		Version:   version.Version().Original(),
+		Version:   semver.MustParse(Semver).Original(),
 		Usage:     "Manages multiple go versions for linux. See https://go.dev/dl for available versions.",
-		UsageText: fmt.Sprintf("%s <command> [version]", version.AppName),
+		UsageText: fmt.Sprintf("%s <command> [version]", AppName),
 		Commands: []*cli.Command{
 			{
 				Name:      "install",
-				Usage:     "Install a go version. Usually in the form 1.18, 1.9, 1.17.8.",
-				UsageText: fmt.Sprintf("%s install [version]", version.AppName),
+				Usage:     "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
+				UsageText: fmt.Sprintf("%s install [version]", AppName),
 				Aliases:   []string{"i"},
 				Action:    cmd.InstallCommand,
 			},
 			{
 				Name:      "uninstall",
 				Usage:     "Uninstall a go version",
-				UsageText: fmt.Sprintf("%s uninstall [version]", version.AppName),
+				UsageText: fmt.Sprintf("%s uninstall [version]", AppName),
 				Aliases:   []string{"rm"},
 				Action:    cmd.UninstallCommand,
 			},
 			{
 				Name:      "use",
 				Usage:     "Use a go version",
-				UsageText: fmt.Sprintf("%s use [version]", version.AppName),
+				UsageText: fmt.Sprintf("%s use [version]", AppName),
 				Aliases:   []string{"u"},
 				Action:    cmd.UseCommand,
 			},

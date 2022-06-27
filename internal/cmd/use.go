@@ -44,6 +44,10 @@ func Use(config *pkg.Config, version string) error {
 		return err
 	}
 
+	if path := os.Getenv("PATH"); !strings.Contains(path, config.GoenvInstallDirectory) {
+		pkg.Info(fmt.Sprintf("%s is not in your PATH:%s", config.GoenvInstallDirectory, path))
+	}
+
 	output, err := exec.Command("go", "version").Output()
 	if err != nil {
 		pkg.Debug(err.Error())

@@ -14,6 +14,10 @@ func Fail(mesg string) {
 	color.Red("😭 %s", mesg)
 }
 
+func Info(mesg string) {
+	color.White("🙂 %s", mesg)
+}
+
 func Debug(mesg string) {
 	logLevel := os.Getenv("GOENV_LOG")
 	if logLevel == "DEBUG" {

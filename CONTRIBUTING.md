@@ -1,15 +1,17 @@
 # Contributing
 
-Pull Requests are welcome! I'd like to keep this project small, simple, and cute 🥳. The [Makefile](./Makefile) is heavily commented to help lower the barrier to contributions.
+Pull Requests are welcome! I'd like to keep this project small, simple, and friendly 🥳. The [Makefile](./Makefile) is heavily commented to help lower the barrier to contributions.
 
 ## How This Works
 
 `goenv` does the following:
   - Downloads the tarball for the corresponding version a user provides
-  - Extracts the tarball to `/usr/local/go/${VERSION}`. For example, `goenv install 1.17.6` will create `/usr/local/go/1.17.6`
-  - Creates a symlink from `/usr/local/bin/go/` to `/usr/local/go/1.17.6/bin/go`. The same thing happens for `gofmt`.
+  - Extracts the tarball to `/usr/local/goenv/${VERSION}`. For example, `goenv install 1.17.6` will create `/usr/local/goenv/1.17.6`
+  - Creates a symlink from `/usr/local/bin/go/` to `/usr/local/goenv/1.17.6/bin/go`. The same thing happens for `gofmt`.
 
-This project resists adding more functionality in an attempt to be simple. The four available commands will be limited to that for the forseeable future.
+The install directory `/usr/local/goenv` is configurable through environment variables.
+
+This project resists adding more functionality in an attempt to be simple.
 
 ## Other Implementations
 

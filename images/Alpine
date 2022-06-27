@@ -15,6 +15,10 @@ COPY scripts/goenv-test.sh /usr/local/bin/goenv-test
 RUN \
     apk update && apk add sudo gcompat && \
     adduser -D -h /home/drew drew && \
+    mkdir -p /home/drew/local/ && \
+    chown drew /home/drew/local && \
     echo "drew ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
+ENV GOENV_ROOT_DIR="/home/drew/local/goenv"
+ENV GOENV_INSTALL_DIR="/home/drew/local/go"
 USER drew

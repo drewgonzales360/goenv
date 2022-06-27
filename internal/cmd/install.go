@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"path"
 
 	"github.com/Masterminds/semver"
 	"github.com/drewgonzales360/goenv/internal/pkg"
@@ -15,14 +16,19 @@ func InstallCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := Install(version); err != nil {
+	config, err := parseConfig(c)
+	if err != nil {
+		return err
+	}
+
+	if err := Install(config, version); err != nil {
 		return err
 	}
 	return nil
 }
 
-func Install(version string) error {
-	if inaccessible := pkg.CheckRW(); len(inaccessible) > 0 {
+func Install(config *pkg.Config, version string) error {
+	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
@@ -36,10 +42,10 @@ func Install(version string) error {
 		return errors.Wrap(err, "could not download go")
 	}
 
-	err = pkg.ExtractTarGz(filePath, InstallDirectory+goVersion.Original())
+	err = pkg.ExtractTarGz(filePath, path.Join(config.GoenvRootDirectory, goVersion.Original()))
 	if err != nil {
 		return errors.Wrap(err, "could not extract go")
 	}
 
-	return Use(version)
+	return Use(config, version)
 }

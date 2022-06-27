@@ -33,6 +33,7 @@ func main() {
 				Usage:     "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
 				UsageText: fmt.Sprintf("%s install [version]", AppName),
 				Aliases:   []string{"i"},
+				Before:    cmd.BeforeActionParseConfig,
 				Action:    cmd.InstallCommand,
 			},
 			{
@@ -40,6 +41,7 @@ func main() {
 				Usage:     "Uninstall a go version",
 				UsageText: fmt.Sprintf("%s uninstall [version]", AppName),
 				Aliases:   []string{"rm"},
+				Before:    cmd.BeforeActionParseConfig,
 				Action:    cmd.UninstallCommand,
 			},
 			{
@@ -47,6 +49,7 @@ func main() {
 				Usage:     "Use a go version",
 				UsageText: fmt.Sprintf("%s use [version]", AppName),
 				Aliases:   []string{"u"},
+				Before:    cmd.BeforeActionParseConfig,
 				Action:    cmd.UseCommand,
 			},
 			{
@@ -59,7 +62,15 @@ func main() {
 						Aliases: []string{"a"},
 					},
 				},
+				Before: cmd.BeforeActionParseConfig,
 				Action: cmd.ListCommand,
+			},
+			{
+				Name:    "config",
+				Usage:   "prints the current config",
+				Aliases: []string{"c"},
+				Before:  cmd.BeforeActionParseConfig,
+				Action:  cmd.ConfigCommand,
 			},
 		},
 		HideHelpCommand: true,

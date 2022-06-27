@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"path"
 	"strings"
 
 	"github.com/Masterminds/semver"
@@ -18,14 +19,19 @@ func UseCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := Use(version); err != nil {
+	config, err := parseConfig(c)
+	if err != nil {
+		return err
+	}
+
+	if err := Use(config, version); err != nil {
 		return err
 	}
 	return nil
 }
 
-func Use(version string) error {
-	if inaccessible := pkg.CheckRW(); len(inaccessible) > 0 {
+func Use(config *pkg.Config, version string) error {
+	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
@@ -34,11 +40,11 @@ func Use(version string) error {
 		return errors.Wrap(err, "could not parse version as a semver")
 	}
 
-	if err = link(goVersion); err != nil {
+	if err = link(config, goVersion); err != nil {
 		return err
 	}
 
-	output, err := exec.Command(UsrLocalGo+"/bin/go", "version").Output()
+	output, err := exec.Command("go", "version").Output()
 	if err != nil {
 		pkg.Debug(err.Error())
 		return err
@@ -48,20 +54,20 @@ func Use(version string) error {
 	return nil
 }
 
-func link(goVersion *semver.Version) error {
-	if _, err := os.Stat(UsrLocalGo); err == nil {
-		if err = os.Remove(UsrLocalGo); err != nil {
-			return errors.Wrap(err, "could not remove "+UsrLocalGo)
+func link(config *pkg.Config, goVersion *semver.Version) error {
+	if _, err := os.Stat(config.GoenvInstallDirectory); err == nil {
+		if err = os.Remove(config.GoenvInstallDirectory); err != nil {
+			return errors.Wrap(err, "could not remove "+config.GoenvInstallDirectory)
 		}
 	}
 
-	usrLocalGoVersion := InstallDirectory + goVersion.Original()
+	usrLocalGoVersion := path.Join(config.GoenvRootDirectory, goVersion.Original())
 	if _, err := os.Stat(usrLocalGoVersion); err != nil {
 		pkg.Debug(err.Error())
 		return fmt.Errorf("could not find go version %s. goenv install %s", goVersion.Original(), goVersion.Original())
 	}
 
-	if err := os.Symlink(usrLocalGoVersion, UsrLocalGo); err != nil {
+	if err := os.Symlink(usrLocalGoVersion, config.GoenvInstallDirectory); err != nil {
 		return errors.Wrap(err, "could not link")
 	}
 

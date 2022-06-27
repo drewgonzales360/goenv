@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"path"
 
 	"github.com/Masterminds/semver"
 	"github.com/drewgonzales360/goenv/internal/pkg"
@@ -16,14 +17,19 @@ func UninstallCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := Uninstall(version); err != nil {
+	config, err := parseConfig(c)
+	if err != nil {
+		return err
+	}
+
+	if err := Uninstall(config, version); err != nil {
 		return err
 	}
 	return nil
 }
 
-func Uninstall(version string) error {
-	if inaccessible := pkg.CheckRW(); len(inaccessible) > 0 {
+func Uninstall(config *pkg.Config, version string) error {
+	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
@@ -32,7 +38,7 @@ func Uninstall(version string) error {
 		return errors.Wrap(err, "could not parse version as a semver")
 	}
 
-	if err = os.RemoveAll(InstallDirectory + goVersion.Original()); err != nil {
+	if err = os.RemoveAll(path.Join(config.GoenvRootDirectory, goVersion.Original())); err != nil {
 		return errors.Wrap(err, "could not uninstall go")
 	}
 

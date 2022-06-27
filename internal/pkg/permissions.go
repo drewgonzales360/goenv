@@ -5,11 +5,11 @@ import (
 	"time"
 )
 
-func CheckRW() []string {
+func CheckRW(config *Config) []string {
 	accessDenied := []string{}
 	currentTime := time.Now().Local()
 
-	dirs := []string{"/usr/local/goenv", "/usr/local/go"}
+	dirs := []string{config.GoenvRootDirectory, config.GoenvInstallDirectory}
 	for _, dir := range dirs {
 		if _, err := os.Stat(dir); err == nil {
 			if err := os.Chtimes(dir, currentTime, currentTime); err != nil {

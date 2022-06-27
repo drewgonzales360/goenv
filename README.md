@@ -42,3 +42,13 @@ export PATH=/usr/local/go/bin:PATH
 ```
 
 It's best to install this binary without `go install` so that it is managed independent of Go.
+
+## Configuration
+
+```json
+{
+    "go.goroot": "/Users/drew.gonzales/.local/go"
+}
+```
+
+If your VScode editor throws you weird errors on start up.

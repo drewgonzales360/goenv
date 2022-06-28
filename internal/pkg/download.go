@@ -27,19 +27,15 @@ const (
 var seededRand *rand.Rand = rand.New(
 	rand.NewSource(time.Now().UnixNano()))
 
-func StringWithCharset(length int, charset string) string {
-	b := make([]byte, length)
+func randomString() string {
+	b := make([]byte, 6)
 	for i := range b {
 		b[i] = charset[seededRand.Intn(len(charset))]
 	}
 	return string(b)
 }
 
-func RandomString() string {
-	return StringWithCharset(8, charset)
-}
-
-func FormatDownloadURL(v *semver.Version) string {
+func formatDownloadURL(v *semver.Version) string {
 	urlVersion := v.String()
 	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
 	// actually inclued the last .0
@@ -61,8 +57,8 @@ func FormatDownloadURL(v *semver.Version) string {
 	return url
 }
 
-// DownloadFile will download a url to a local file. It's efficient because it will
-// write as it downloads and not load the whole file into memory.
+// DownloadFile will download a url to a local file. If we have a recorded shasum for the
+// file, we'll check it. We'll return a path to the downloaded file.
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
 func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
@@ -70,7 +66,7 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s.Start()                                                  // Start the spinner
 	defer s.Stop()
 
-	url := FormatDownloadURL(v)
+	url := formatDownloadURL(v)
 	resp, err := http.Get(url)
 	if err != nil {
 		return "", err
@@ -86,7 +82,7 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
-	filepath = fmt.Sprintf("/tmp/goenv/%s.tar.gz", RandomString())
+	filepath = fmt.Sprintf("%s/%s.tar.gz", tempDir, randomString())
 	out, err := os.Create(filepath)
 	if err != nil {
 		return "", err
@@ -130,6 +126,8 @@ func checkHash(file string, expected string) (bool, error) {
 	return true, nil
 }
 
+// ExtractTarGz will do the equivalent of a tar -xzvf -C and untar the
+// tarball to whichever destination path we need to go to.
 func ExtractTarGz(tarballPath, destinationPath string) error {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
 	s.Suffix = " Extracting package" // Build our new spinner

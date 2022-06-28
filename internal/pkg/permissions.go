@@ -5,6 +5,9 @@ import (
 	"time"
 )
 
+// CheckRW checks if the user can install and use Go by making sure
+// they have read and write access to the directories where go will
+// be installed.
 func CheckRW(config *Config) []string {
 	accessDenied := []string{}
 	currentTime := time.Now().Local()

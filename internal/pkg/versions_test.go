@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Masterminds/semver"
+
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
@@ -12,6 +13,8 @@ import (
 // we won't fail on those so as not to block new versions from being
 // downloaded.
 func TestShasumsAreAccurate(t *testing.T) {
+	t.Skip("skipping download test because it's slow")
+
 	for _, v := range pkg.GoVersions {
 		for version := range v {
 			v := semver.MustParse(version)

@@ -16,6 +16,9 @@ type GoVersion struct {
 
 type GoVersionList = map[string]map[string]GoVersion
 
+// CreateGoVersionList will take a list of all the directories in
+// goenv and then parse it into a GoVersionList. We do this so that
+// we can print the installed Go versions nicely for the user.
 func CreateGoVersionList(directories []string) GoVersionList {
 	goVersionList := GoVersionList{}
 	for _, d := range directories {
@@ -30,6 +33,8 @@ func CreateGoVersionList(directories []string) GoVersionList {
 	return goVersionList
 }
 
+// Print will nicely display the installed and available versions of
+// Go you can install to the terminal.
 func Print(g *GoVersionList) {
 	for minorVersion, patchVersions := range *g {
 		color.New(color.FgHiBlack).Printf("%s: ", minorVersion)
@@ -42,6 +47,9 @@ func Print(g *GoVersionList) {
 	}
 }
 
+// GetHash reads through our database in hashes.go and returns the
+// known shasum. If we don't know the shasum, either because the
+// version of Go is too new or too old, we return an empty string.
 func GetHash(v *semver.Version) string {
 	majorMinor := fmt.Sprintf("%d.%d", v.Major(), v.Minor())
 

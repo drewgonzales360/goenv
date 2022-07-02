@@ -10,7 +10,12 @@ import (
 )
 
 func ListCommand(c *cli.Context) error {
-	versions, err := os.ReadDir(InstallDirectory)
+	config, err := parseConfig(c)
+	if err != nil {
+		return err
+	}
+
+	versions, err := os.ReadDir(config.GoenvRootDirectory)
 	if err != nil {
 		return err
 	}

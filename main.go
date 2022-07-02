@@ -5,15 +5,16 @@ import (
 	"os"
 
 	"github.com/Masterminds/semver"
+	"github.com/urfave/cli/v2"
+
 	"github.com/drewgonzales360/goenv/internal/cmd"
 	"github.com/drewgonzales360/goenv/internal/pkg"
-	"github.com/urfave/cli/v2"
 )
 
-const (
-	appName = "goenv"
-	Semver  = "unknown; please create an issue for the maintainers"
-)
+const appName = "goenv"
+
+// Semver is set in the Makefile
+var Semver = "unknown; please create an issue for the maintainers"
 
 func main() {
 	app := &cli.App{
@@ -38,7 +39,7 @@ func main() {
 			},
 			{
 				Name:      "uninstall",
-				Usage:     "Uninstall a go version",
+				Usage:     "Uninstall a Go version",
 				UsageText: fmt.Sprintf("%s uninstall [version]", appName),
 				Aliases:   []string{"rm"},
 				Before:    cmd.BeforeActionParseConfig,
@@ -46,7 +47,7 @@ func main() {
 			},
 			{
 				Name:      "use",
-				Usage:     "Use a go version",
+				Usage:     "Use a Go version",
 				UsageText: fmt.Sprintf("%s use [version]", appName),
 				Aliases:   []string{"u"},
 				Before:    cmd.BeforeActionParseConfig,
@@ -54,7 +55,7 @@ func main() {
 			},
 			{
 				Name:    "list",
-				Usage:   "List all available go versions",
+				Usage:   "List all available Go versions",
 				Aliases: []string{"ls", "l"},
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
@@ -67,7 +68,7 @@ func main() {
 			},
 			{
 				Name:    "config",
-				Usage:   "prints the current config",
+				Usage:   "Prints the current config.",
 				Aliases: []string{"c"},
 				Before:  cmd.BeforeActionParseConfig,
 				Action:  cmd.ConfigCommand,

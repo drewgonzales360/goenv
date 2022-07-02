@@ -8,9 +8,10 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
-	"github.com/drewgonzales360/goenv/internal/pkg"
 	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
+
+	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
 func UseCommand(c *cli.Context) error {

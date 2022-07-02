@@ -4,8 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	"github.com/drewgonzales360/goenv/internal/pkg"
 	"github.com/urfave/cli/v2"
+
+	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
 const (

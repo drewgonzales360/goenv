@@ -4,6 +4,7 @@ import (
 	"testing"
 
 	"github.com/Masterminds/semver"
+
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 

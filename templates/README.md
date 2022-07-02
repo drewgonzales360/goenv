@@ -42,3 +42,18 @@ export PATH=/usr/local/go/bin:PATH
 ```
 
 It's best to install this binary without `go install` so that it is managed independent of Go.
+
+## Configuration
+
+| Environment Variable  | Default             | Explanation |
+| -                     | -                   | - |
+| GOENV_ROOT_DIR        | "/usr/local/go"     | Usually equivalent to your GoRoot. This is should be in your path and links to the GOENV_INSTALL_DIR |
+| GOENV_INSTALL_DIR     | "/usr/local/goenv"  | Directory where your various Go installations will be installed |
+
+If your VScode editor throws you weird errors on start up, add this to your vscode settings.json.
+```json
+{
+    "go.gopath": "/home/drewgonzales/docs/CS/Code/go",
+    "go.goroot": "/home/drewgonzales/usr/local/go",
+}
+```

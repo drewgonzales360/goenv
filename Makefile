@@ -47,7 +47,7 @@ release:
 	gh release create --notes "Release ${VERSION}" --target main ${SEMVER} tmp/goenv-*-amd64-${SEMVER}.tar.gz
 
 readme:
-	envsubst < templates/README.md > README.md
+	@sed "s/XXLatestXX/${SEMVER}/g" < templates/README.md > README.md
 
 # Turns on some hooks to check format and build status before commiting/pushing. Optional, but helpful.
 githooks:

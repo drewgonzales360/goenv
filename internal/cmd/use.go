@@ -25,13 +25,13 @@ func UseCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := Use(config, version); err != nil {
+	if err := use(config, version); err != nil {
 		return err
 	}
 	return nil
 }
 
-func Use(config *pkg.Config, version string) error {
+func use(config *pkg.Config, version string) error {
 	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
@@ -45,9 +45,7 @@ func Use(config *pkg.Config, version string) error {
 		return err
 	}
 
-	if path := os.Getenv("PATH"); !strings.Contains(path, config.GoenvInstallDirectory) {
-		pkg.Info(fmt.Sprintf("%s is not in your PATH:%s", config.GoenvInstallDirectory, path))
-	}
+	warnOnMissingPath(config)
 
 	output, err := exec.Command("go", "version").Output()
 	if err != nil {
@@ -60,19 +58,20 @@ func Use(config *pkg.Config, version string) error {
 }
 
 func link(config *pkg.Config, goVersion *semver.Version) error {
-	if _, err := os.Stat(config.GoenvInstallDirectory); err == nil {
-		if err = os.Remove(config.GoenvInstallDirectory); err != nil {
-			return errors.Wrap(err, "could not remove "+config.GoenvInstallDirectory)
+	// Remove the old symlink
+	if _, err := os.Stat(config.GoenvRootDirectory); err == nil {
+		if err = os.Remove(config.GoenvRootDirectory); err != nil {
+			return errors.Wrap(err, "could not remove "+config.GoenvRootDirectory)
 		}
 	}
 
-	usrLocalGoVersion := path.Join(config.GoenvRootDirectory, goVersion.Original())
-	if _, err := os.Stat(usrLocalGoVersion); err != nil {
+	goInstallation := path.Join(config.GoenvInstallDirectory, goVersion.Original())
+	if _, err := os.Stat(goInstallation); err != nil {
 		pkg.Debug(err.Error())
 		return fmt.Errorf("could not find go version %s. goenv install %s", goVersion.Original(), goVersion.Original())
 	}
 
-	if err := os.Symlink(usrLocalGoVersion, config.GoenvInstallDirectory); err != nil {
+	if err := os.Symlink(goInstallation, config.GoenvRootDirectory); err != nil {
 		return errors.Wrap(err, "could not link")
 	}
 

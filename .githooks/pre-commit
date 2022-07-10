@@ -21,9 +21,10 @@ fi
 # Check format
 INITIAL_STATUS="$(git status -s | shasum)"
 go fmt
+make readme
 TERMINAL_STATUS="$(git status -s | shasum)"
 if [[ "${INITIAL_STATUS}" != "${TERMINAL_STATUS}" ]]; then
-    fail "go fmt had to format files. review code and try again"
+    fail "had to format files. review code and try again"
 fi
 
 

@@ -3,6 +3,8 @@ package cmd
 import (
 	"context"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/urfave/cli/v2"
 
@@ -32,4 +34,12 @@ func BeforeActionParseConfig(c *cli.Context) error {
 	c.Context = context.WithValue(c.Context, "config", pkg.ReadConfig())
 	pkg.Debug(fmt.Sprintf("%+v", pkg.ReadConfig()))
 	return nil
+}
+
+func warnOnMissingPath(config *pkg.Config) {
+	bin := config.GoenvRootDirectory + "/bin"
+	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {
+		pkg.Info(fmt.Sprintf("%s is not in your PATH", bin))
+		pkg.Info(fmt.Sprintf("export PATH=%s:$PATH # to include it", bin))
+	}
 }

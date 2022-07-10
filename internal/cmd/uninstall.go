@@ -23,13 +23,13 @@ func UninstallCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := Uninstall(config, version); err != nil {
+	if err := uninstall(config, version); err != nil {
 		return err
 	}
 	return nil
 }
 
-func Uninstall(config *pkg.Config, version string) error {
+func uninstall(config *pkg.Config, version string) error {
 	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}

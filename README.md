@@ -2,7 +2,7 @@
 
 ![github workflow](https://github.com/drewgonzales360/goenv/actions/workflows/github-actions.yml/badge.svg)
 
-goenv is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website and manages several Go versions. There are several other implementations that have more features, but this has fewer ones by design. Goenv downloads and extracts go to `/usr/local/goenv/<VERSION>` and adds a symlink from `/usr/local/go -> /usr/local/goenv/<VERSION>`. It doesn't do anything fancy like guess the version of a project, intercept calls to `go`, or check for new versions.
+goenv is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website and manages several Go versions. Goenv downloads and extracts go to `/usr/local/goenv/<VERSION>` and adds a symlink from `/usr/local/go -> /usr/local/goenv/<VERSION>`. It was heavily inspired by [Dave Cheney's blog post](https://dave.cheney.net/2014/04/20/how-to-install-multiple-versions-of-go).
 
 ## Usage
 
@@ -47,13 +47,22 @@ It's best to install this binary without `go install` so that it is managed inde
 
 | Environment Variable  | Default             | Explanation |
 | -                     | -                   | - |
-| GOENV_ROOT_DIR        | "/usr/local/go"     | Usually equivalent to your GoRoot. This is should be in your path and links to the GOENV_INSTALL_DIR |
+| GOENV_ROOT_DIR        | "/usr/local/go"     | This is the default Go root. This is should be in your path and links to the GOENV_INSTALL_DIR |
 | GOENV_INSTALL_DIR     | "/usr/local/goenv"  | Directory where your various Go installations will be installed |
+
+The default `GOROOT` usually requires root access. You can avoid it by setting the configuration variables above. Adding
+
+```shell
+# goenv configuration
+export GOENV_INSTALL_DIR="/home/drew/.local/goenv"
+export GOENV_ROOT_DIR="/home/drew/.local/go"
+export PATH="/mnt/NRG/usr/local/go/bin:/mnt/NRG/usr/local/goenv/bin:/mnt/NRG/usr/local/go/bin:/mnt/NRG/usr/local/go/bin:/home/drew/.cargo/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin:/snap/bin:/home/drew/.fzf/bin:/mnt/NRG/Docs/CS/Code/go/bin:/home/drew/.cargo/bin:/mnt/NRG/Docs/CS/Code/go/bin:/home/drew/.cargo/bin"
+```
 
 If your VScode editor throws you weird errors on start up, add this to your vscode settings.json.
 ```json
 {
-    "go.gopath": "/home/drewgonzales/docs/CS/Code/go",
-    "go.goroot": "/home/drewgonzales/usr/local/go",
+    "go.gopath": "/your/gopath",
+    "go.goroot": "/your/goroot", # or whatever /mnt/NRG/usr/local/go is set to
 }
 ```

@@ -22,13 +22,13 @@ func InstallCommand(c *cli.Context) error {
 		return err
 	}
 
-	if err := Install(config, version); err != nil {
+	if err := install(config, version); err != nil {
 		return err
 	}
 	return nil
 }
 
-func Install(config *pkg.Config, version string) error {
+func install(config *pkg.Config, version string) error {
 	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
@@ -43,10 +43,10 @@ func Install(config *pkg.Config, version string) error {
 		return errors.Wrap(err, "could not download go")
 	}
 
-	err = pkg.ExtractTarGz(filePath, path.Join(config.GoenvRootDirectory, goVersion.Original()))
+	err = pkg.ExtractTarGz(filePath, path.Join(config.GoenvInstallDirectory, goVersion.Original()))
 	if err != nil {
 		return errors.Wrap(err, "could not extract go")
 	}
 
-	return Use(config, version)
+	return use(config, version)
 }

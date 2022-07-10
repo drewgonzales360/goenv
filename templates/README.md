@@ -10,13 +10,13 @@ To install goenv, follow the steps below. Older releases are in the [Releases pa
 
 ```bash
 # Step 1: Linux Only
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/${SEMVER}/goenv-linux-amd64-${SEMVER}.tar.gz -o /tmp/goenv-${SEMVER}.tar.gz
+curl -sSL https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-linux-amd64-XXLatestXX.tar.gz -o /tmp/goenv-XXLatestXX.tar.gz
 
 # Step 1: Mac Only
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/${SEMVER}/goenv-darwin-amd64-${SEMVER}.tar.gz -o /tmp/goenv-${SEMVER}.tar.gz
+curl -sSL https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-darwin-amd64-XXLatestXX.tar.gz -o /tmp/goenv-XXLatestXX.tar.gz
 
 # Step 2: Extract and Install Go
-tar -xzvf /tmp/goenv-${SEMVER}.tar.gz -C /tmp
+tar -xzvf /tmp/goenv-XXLatestXX.tar.gz -C /tmp
 mv /tmp/goenv /usr/local/bin
 
 # Step 3: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH

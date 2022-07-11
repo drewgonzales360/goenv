@@ -8,7 +8,6 @@ VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 # go tool nm ./goenv
 build:
 	go build -ldflags="-X 'main.Semver=${VERSION}'"
-	@./goenv -v
 
 install:
 	mv goenv /usr/local/bin

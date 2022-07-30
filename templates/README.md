@@ -2,7 +2,7 @@
 
 ![github workflow](https://github.com/drewgonzales360/goenv/actions/workflows/github-actions.yml/badge.svg)
 
-goenv is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website and manages several Go versions. Goenv downloads and extracts go to `/usr/local/goenv/<VERSION>` and adds a symlink from `/usr/local/go -> /usr/local/goenv/<VERSION>`. It was heavily inspired by [Dave Cheney's blog post](https://dave.cheney.net/2014/04/20/how-to-install-multiple-versions-of-go).
+`goenv` is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website and manages several Go versions. `goenv` downloads and extracts go to `/usr/local/goenv/<VERSION>` and adds a symlink from `/usr/local/go -> /usr/local/goenv/<VERSION>` (by default). It was heavily inspired by [Dave Cheney's blog post](https://dave.cheney.net/2014/04/20/how-to-install-multiple-versions-of-go).
 
 ## Install
 
@@ -47,23 +47,23 @@ goenv list
 
 | Environment Variable  | Default             | Explanation |
 | -                     | -                   | - |
-| GOENV_ROOT_DIR        | "/usr/local/go"     | This is the default Go root. This is should be in your path and links to the GOENV_INSTALL_DIR |
+| GOENV_ROOT_DIR        | "/usr/local/go"     | This is the default Go root. This is should be in your path and links to the `GOENV_INSTALL_DIR`. If you choose to set this, you must also set your `GOROOT` to this location. |
 | GOENV_INSTALL_DIR     | "/usr/local/goenv"  | Directory where your various Go installations will be installed |
 
-The default `GOROOT` usually requires root access. You can avoid it by setting the configuration variables above. Adding
+The default `GOROOT` usually requires root access. You can avoid it by setting the configuration variables above. Adding the following to your .zshrc, .bashrc, etc will avoid needing root access.
 
 ```shell
-# goenv configuration
+# goenv configuration, mkdir $HOME/.local if it doesn't exist
 export GOENV_INSTALL_DIR="$HOME/.local/goenv"
 export GOENV_ROOT_DIR="$HOME/.local/go"
 export PATH="$GOENV_ROOT_DIR/bin:$PATH"
 ```
 
-If your VScode editor throws you weird errors on start up, add this to your vscode settings.json.
+If your VScode editor throws you weird errors on start up, add this to your vscode settings.json. This happens because of the non-default `GOROOT`.
 ```json
 {
     "go.gopath": "/your/gopath",
-    "go.goroot": "/your/goroot", # or whatever $GOENV_ROOT_DIR is set to
+    "go.goroot": "/path/to/.local/go", # or whatever $GOENV_ROOT_DIR is set to
 }
 ```
 
@@ -78,7 +78,7 @@ The install directory `/usr/local/goenv` and root directory `/usr/local/go` is c
 
 ## Other Implementations
 
-There are a few other implementations of this that have more features, but I only needed the binaries. Other implementations can do fancier things like check for the correct Go version for a module and use the corresponding version in runtime, but they require intercepting the call to Go and passing the command to the right version. I didn't want my code to be in the "hot path."
+There are a few other implementations of this that have more features, but I only needed the binaries. Other implementations can do fancier things like check for the correct Go version for a module and use the corresponding version when called, but they require intercepting the call to Go and passing the command to the right version. I didn't want my code to be in the "hot path."
 
 A few other implementations are also written in other languages. This one is written in Go 🥵.
 

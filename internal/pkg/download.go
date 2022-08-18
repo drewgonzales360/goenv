@@ -10,7 +10,6 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
-	"runtime"
 	"strings"
 	"time"
 
@@ -35,28 +34,6 @@ func randomString() string {
 	return string(b)
 }
 
-func formatDownloadURL(v *semver.Version) string {
-	urlVersion := v.String()
-	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
-	// actually inclued the last .0
-	if v.Patch() == 0 {
-		urlVersion = strings.TrimSuffix(urlVersion, ".0")
-	}
-
-	os := runtime.GOOS
-	arch := runtime.GOARCH
-	if os != "linux" && os != "darwin" {
-		Debug(fmt.Sprintf("Running an unsupported os: %s", os))
-	}
-	if arch != "amd64" {
-		Debug(fmt.Sprintf("Running an unsupported arch: %s", arch))
-	}
-
-	url := fmt.Sprintf("https://go.dev/dl/go%s.%s-%s.tar.gz", urlVersion, os, arch)
-	Debug(fmt.Sprintf("Downloading %s", url))
-	return url
-}
-
 // DownloadFile will download a url to a local file. If we have a recorded shasum for the
 // file, we'll check it. We'll return a path to the downloaded file.
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
@@ -66,10 +43,10 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s.Start()                                                  // Start the spinner
 	defer s.Stop()
 
-	url := formatDownloadURL(v)
+	url, checksum := getDownloadInfo(v)
 	resp, err := http.Get(url)
 	if err != nil {
-		return "", err
+		return "", errors.Wrap(err, fmt.Sprintf("url=%s", url))
 	}
 	defer resp.Body.Close()
 
@@ -95,7 +72,7 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
-	if ok, err := checkHash(filepath, GetHash(v)); err != nil || !ok {
+	if ok, err := checkHash(filepath, checksum); err != nil || !ok {
 		return "", err
 	}
 
@@ -108,7 +85,7 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 // what we downloaded. If we haven't put the hash in, this won't throw an error.
 // This way, we don't _have_ to update every time a new version comes out. We
 // just won't check the hash.
-func checkHash(file string, expected string) (bool, error) {
+func checkHash(file string, expected ChecksumSHA256) (bool, error) {
 	if expected == "" {
 		return true, nil
 	}
@@ -119,7 +96,7 @@ func checkHash(file string, expected string) (bool, error) {
 
 	sum := sha256.Sum256(out)
 	downloaded := hex.EncodeToString(sum[:])
-	if downloaded != expected {
+	if downloaded != string(expected) {
 		return false, fmt.Errorf("file corrupted, downloaded: %s, expected %s", downloaded, expected)
 	}
 

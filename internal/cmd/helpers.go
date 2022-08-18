@@ -38,6 +38,8 @@ func BeforeActionParseConfig(c *cli.Context) error {
 
 func warnOnMissingPath(config *pkg.Config) {
 	bin := config.GoenvRootDirectory + "/bin"
+	// TODO: if root installs, and root doesn't have this in the path, it'll warn
+	// unnessecarily
 	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {
 		pkg.Info(fmt.Sprintf("%s is not in your PATH", bin))
 		pkg.Info(fmt.Sprintf("export PATH=%s:$PATH # to include it", bin))

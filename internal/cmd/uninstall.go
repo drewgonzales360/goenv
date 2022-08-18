@@ -39,7 +39,7 @@ func uninstall(config *pkg.Config, version string) error {
 		return errors.Wrap(err, "could not parse version as a semver")
 	}
 
-	if err = os.RemoveAll(path.Join(config.GoenvRootDirectory, goVersion.Original())); err != nil {
+	if err = os.RemoveAll(path.Join(config.GoenvInstallDirectory, goVersion.Original())); err != nil {
 		return errors.Wrap(err, "could not uninstall go")
 	}
 

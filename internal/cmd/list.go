@@ -15,7 +15,7 @@ func ListCommand(c *cli.Context) error {
 		return err
 	}
 
-	versions, err := os.ReadDir(config.GoenvRootDirectory)
+	versions, err := os.ReadDir(config.GoenvInstallDirectory)
 	if err != nil {
 		return err
 	}
@@ -26,11 +26,19 @@ func ListCommand(c *cli.Context) error {
 	}
 	installed := pkg.CreateGoVersionList(names)
 	color.New(color.FgCyan, color.Bold).Println("Installed Versions:")
-	pkg.Print(&installed)
+	pkg.Print(installed)
 
-	if c.Bool("available") {
+	all := c.Bool("all")
+	printAvailable := c.Bool("stable") || all
+	if printAvailable {
 		color.New(color.FgCyan, color.Bold).Println("Available Versions:")
-		pkg.Print(&pkg.GoVersions)
+		versions, err := pkg.ListAvailableVersions(all)
+		if err != nil {
+			return err
+		}
+
+		gvl := pkg.CreateGoVersionList(versions)
+		pkg.Print(gvl)
 	}
 
 	return nil

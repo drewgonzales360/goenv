@@ -13,6 +13,8 @@ func TestDiscover(t *testing.T) {
 		t.Fail()
 	}
 
+	if len(releases) == 0 {
+		t.Fail()
+	}
 	t.Logf("%+v", releases)
-	t.Fail()
 }

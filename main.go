@@ -59,7 +59,11 @@ func main() {
 				Aliases: []string{"ls", "l"},
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
-						Name:    "available",
+						Name:    "stable",
+						Aliases: []string{"s"},
+					},
+					&cli.BoolFlag{
+						Name:    "all",
 						Aliases: []string{"a"},
 					},
 				},

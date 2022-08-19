@@ -53,8 +53,8 @@ Installed Versions:
 
 # Shows the go installation location.
 ❯ goenv config
-GOENV_ROOT_DIR:    /Users/drew.gonzales/.local/go    (set by environment variable)
-GOENV_INSTALL_DIR: /Users/drew.gonzales/.local/goenv (set by environment variable)
+GOENV_ROOT_DIR:    /Users/me/.local/go    (set by environment variable)
+GOENV_INSTALL_DIR: /Users/me/.local/goenv (set by environment variable)
 ```
 
 ## Configuration

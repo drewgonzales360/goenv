@@ -14,7 +14,17 @@ function fail {
     exit 1
 }
 
-echo "[info] running build and test..."
+echo "[info] running pre-push hook..."
+
+# Check format
+INITIAL_STATUS="$(git status -s | shasum)"
+go fmt
+go mod tidy
+make readme
+TERMINAL_STATUS="$(git status -s | shasum)"
+if [[ "${INITIAL_STATUS}" != "${TERMINAL_STATUS}" ]]; then
+    fail "ran go fmt, go mod tidy, and make readme. review changes and try again"
+fi
 
 if ! go build &> /dev/null; then
     fail "go build failed. review code and try again"

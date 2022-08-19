@@ -12,7 +12,7 @@ func ConfigCommand(c *cli.Context) error {
 		return err
 	}
 
-	fmt.Println(config)
+	fmt.Print(config)
 	warnOnMissingPath(config)
 	return nil
 }

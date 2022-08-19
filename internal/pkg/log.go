@@ -10,12 +10,16 @@ func Success(mesg string) {
 	color.Green("😎 %s", mesg)
 }
 
-func Fail(mesg string) {
+func Error(mesg string) {
 	color.Red("😭 %s", mesg)
 }
 
 func Info(mesg string) {
-	color.White("🙂 %s", mesg)
+	color.White("😃 %s", mesg)
+}
+
+func Warn(mesg string) {
+	color.Yellow("😥 %s", mesg)
 }
 
 func Debug(mesg string) {

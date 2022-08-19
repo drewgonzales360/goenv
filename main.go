@@ -82,7 +82,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		pkg.Fail(err.Error())
+		pkg.Error(err.Error())
 		os.Exit(1)
 	}
 }

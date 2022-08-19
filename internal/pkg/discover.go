@@ -94,7 +94,7 @@ func getDownloadInfo(v *semver.Version) (url string, checkSum ChecksumSHA256) {
 	}
 
 	if url == "" {
-		Fail("could not find release")
+		Error("could not find release")
 	}
 	return url, checkSum
 }

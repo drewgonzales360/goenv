@@ -12,6 +12,10 @@ func CheckRW(config *Config) []string {
 	accessDenied := []string{}
 	currentTime := time.Now().Local()
 
+	if err := removeDeadLink(config.GoenvRootDirectory); err != nil {
+		Debug(err.Error())
+	}
+
 	dirs := []string{config.GoenvRootDirectory, config.GoenvInstallDirectory}
 	for _, dir := range dirs {
 		if _, err := os.Stat(dir); err == nil {
@@ -28,4 +32,23 @@ func CheckRW(config *Config) []string {
 	}
 
 	return accessDenied
+}
+
+func removeDeadLink(path string) error {
+	installDir, err := os.Readlink(path)
+	if err != nil {
+		return err
+	}
+
+	_, err = os.Stat(installDir)
+	if err == nil {
+		return nil
+	}
+
+	err = os.Remove(path)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

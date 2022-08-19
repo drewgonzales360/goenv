@@ -54,7 +54,7 @@ func sortSemvers(raw []string) []*semver.Version {
 	for i, r := range raw {
 		v, err := semver.NewVersion(r)
 		if err != nil {
-			Fail(fmt.Sprintf("could not parse semver: %s %s", err.Error(), r))
+			Error(fmt.Sprintf("could not parse semver: %s %s", err.Error(), r))
 		}
 
 		vs[i] = v

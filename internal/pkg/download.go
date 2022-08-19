@@ -72,11 +72,16 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
-	if ok, err := checkHash(filepath, checksum); err != nil || !ok {
+	validSha, err := checkHash(filepath, checksum)
+	if err != nil || !validSha {
 		return "", err
 	}
 
-	s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v.Original())
+	s.FinalMSG = fmt.Sprintf("✅ Downloaded and validated Go %s\n", v.Original())
+	if !validSha {
+		s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v.Original())
+	}
+
 	return filepath, nil
 }
 

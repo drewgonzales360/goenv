@@ -45,9 +45,15 @@ func use(config *pkg.Config, version string) error {
 		return err
 	}
 
-	warnOnMissingPath(config)
+	isRoot := isRoot()
+	goCmd := "go"
+	if !isRoot {
+		warnOnMissingPath(config)
+	} else {
+		goCmd = path.Join(config.GoenvRootDirectory, "bin", goCmd)
+	}
 
-	output, err := exec.Command("go", "version").Output()
+	output, err := exec.Command(goCmd, "version").Output()
 	if err != nil {
 		pkg.Debug(err.Error())
 		return err
@@ -76,4 +82,8 @@ func link(config *pkg.Config, goVersion *semver.Version) error {
 	}
 
 	return nil
+}
+
+func isRoot() bool {
+	return os.Geteuid() == 0
 }

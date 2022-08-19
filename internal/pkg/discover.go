@@ -41,14 +41,13 @@ type File struct {
 // versions of the latest two minor versions are considered stable. If you want
 // all releases of Go, pass in true.
 func GetGoVersions(getAllVersions bool) ([]Release, error) {
-	// TODO: create a structured URL here.
 	includeAll := "&include=all"
-	url := "https://go.dev/dl/?mode=json"
+	goDevURL := "https://go.dev/dl/?mode=json"
 	if getAllVersions {
-		url = url + includeAll
+		goDevURL = goDevURL + includeAll
 	}
 
-	resp, err := http.DefaultClient.Get(url)
+	resp, err := http.DefaultClient.Get(goDevURL)
 	if err != nil {
 		return nil, errors.Wrap(err, "could not get go versions")
 	}

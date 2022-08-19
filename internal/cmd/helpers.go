@@ -11,8 +11,11 @@ import (
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
+type GoEnvContextKey string
+
 const (
-	PermError string = "you do not have access to %v"
+	PermError string          = "you do not have access to %v"
+	config    GoEnvContextKey = "config"
 )
 
 func parseVersionArg(c *cli.Context) (string, error) {
@@ -23,7 +26,7 @@ func parseVersionArg(c *cli.Context) (string, error) {
 }
 
 func parseConfig(c *cli.Context) (*pkg.Config, error) {
-	config, ok := c.Context.Value("config").(*pkg.Config)
+	config, ok := c.Context.Value(config).(*pkg.Config)
 	if !ok {
 		return nil, fmt.Errorf("could not create config")
 	}
@@ -31,8 +34,8 @@ func parseConfig(c *cli.Context) (*pkg.Config, error) {
 }
 
 func BeforeActionParseConfig(c *cli.Context) error {
-	c.Context = context.WithValue(c.Context, "config", pkg.ReadConfig())
-	pkg.Debug(fmt.Sprintf("%+v", pkg.ReadConfig()))
+	c.Context = context.WithValue(c.Context, config, pkg.ReadConfig())
+	pkg.Debug(fmt.Sprintf("Config:\n%+v", pkg.ReadConfig()))
 	return nil
 }
 
@@ -40,6 +43,6 @@ func warnOnMissingPath(config *pkg.Config) {
 	bin := config.GoenvRootDirectory + "/bin"
 	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {
 		pkg.Info(fmt.Sprintf("%s is not in your PATH", bin))
-		pkg.Info(fmt.Sprintf("export PATH=%s:$PATH # to include it", bin))
+		pkg.Info(fmt.Sprintf("export PATH=%s:$PATH", bin))
 	}
 }

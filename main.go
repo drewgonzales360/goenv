@@ -59,7 +59,11 @@ func main() {
 				Aliases: []string{"ls", "l"},
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
-						Name:    "available",
+						Name:    "stable",
+						Aliases: []string{"s"},
+					},
+					&cli.BoolFlag{
+						Name:    "all",
 						Aliases: []string{"a"},
 					},
 				},
@@ -78,7 +82,7 @@ func main() {
 	}
 
 	if err := app.Run(os.Args); err != nil {
-		pkg.Fail(err.Error())
+		pkg.Error(err.Error())
 		os.Exit(1)
 	}
 }

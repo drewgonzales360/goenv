@@ -2,32 +2,30 @@ package pkg
 
 import (
 	"fmt"
-	"runtime"
+	"sort"
 	"strings"
 
 	"github.com/Masterminds/semver"
 	"github.com/fatih/color"
 )
 
-type GoVersion struct {
-	DarwinHash string
-	LinuxHash  string
-}
-
-type GoVersionList = map[string]map[string]GoVersion
-
 // CreateGoVersionList will take a list of all the directories in
 // goenv and then parse it into a GoVersionList. We do this so that
 // we can print the installed Go versions nicely for the user.
-func CreateGoVersionList(directories []string) GoVersionList {
-	goVersionList := GoVersionList{}
+func CreateGoVersionList(directories []string) map[string][]string {
+	goVersionList := make(map[string][]string)
 	for _, d := range directories {
-		s := semver.MustParse(d)
+		s, err := semver.NewVersion(d)
+		if err != nil {
+			Debug(fmt.Sprintf("could not parse semver: %s %s", err.Error(), d))
+			continue
+		}
+
 		majorMinor := fmt.Sprintf("%d.%d", s.Major(), s.Minor())
 		if _, ok := goVersionList[majorMinor]; !ok {
-			goVersionList[majorMinor] = make(map[string]GoVersion)
+			goVersionList[majorMinor] = []string{}
 		}
-		goVersionList[majorMinor][s.Original()] = GoVersion{}
+		goVersionList[majorMinor] = append(goVersionList[majorMinor], s.Original())
 	}
 
 	return goVersionList
@@ -35,36 +33,40 @@ func CreateGoVersionList(directories []string) GoVersionList {
 
 // Print will nicely display the installed and available versions of
 // Go you can install to the terminal.
-func Print(g *GoVersionList) {
-	for minorVersion, patchVersions := range *g {
-		color.New(color.FgHiBlack).Printf("%s: ", minorVersion)
+func Print(g map[string][]string) {
+	keys := make([]string, 0, len(g))
+	for k := range g {
+		keys = append(keys, k)
+	}
+	m := sortSemvers(keys)
 
-		patches := []string{}
-		for key := range patchVersions {
-			patches = append(patches, key)
-		}
-		fmt.Println(strings.Join(patches, " "))
+	for _, key := range m {
+		color.New(color.FgHiBlack).Printf("%s: ", key.Original())
+
+		l := sortSemvers(g[key.Original()])
+		sa := mapToOriginal(l)
+		fmt.Println(strings.Join(sa, " "))
 	}
 }
 
-// GetHash reads through our database in hashes.go and returns the
-// known shasum. If we don't know the shasum, either because the
-// version of Go is too new or too old, we return an empty string.
-func GetHash(v *semver.Version) string {
-	majorMinor := fmt.Sprintf("%d.%d", v.Major(), v.Minor())
+func sortSemvers(raw []string) []*semver.Version {
+	vs := make([]*semver.Version, len(raw))
+	for i, r := range raw {
+		v, err := semver.NewVersion(r)
+		if err != nil {
+			Error(fmt.Sprintf("could not parse semver: %s %s", err.Error(), r))
+		}
 
-	d, ok := GoVersions[majorMinor][v.Original()]
-	if !ok {
-		Debug("unknown version, but let's download it anyway")
-		return ""
+		vs[i] = v
 	}
 
-	if runtime.GOOS == "darwin" {
-		return d.DarwinHash
-	} else if runtime.GOOS == "linux" {
-		return d.LinuxHash
-	}
+	sort.Sort(semver.Collection(vs))
+	return vs
+}
 
-	Debug("unknown os, but let's download it anyway")
-	return ""
+func mapToOriginal(vs []*semver.Version) (sa []string) {
+	for _, v := range vs {
+		sa = append(sa, v.Original())
+	}
+	return sa
 }

@@ -34,12 +34,33 @@ func uninstall(config *pkg.Config, version string) error {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
+	// Use another version
+	versions, err := os.ReadDir(config.GoenvInstallDirectory)
+	if err != nil {
+		return err
+	}
+
+	if len(versions) < 2 {
+		pkg.Warn("no other installed go versions")
+	}
+
+	for i := range versions {
+		defaultVersion := versions[i].Name()
+		if defaultVersion != version {
+			if err := use(config, defaultVersion); err == nil {
+				break
+			}
+			pkg.Debug(fmt.Sprintf("could not default to %s: %s", defaultVersion, err))
+		}
+	}
+
+	// Remove the old Go version
 	goVersion, err := semver.NewVersion(version)
 	if err != nil {
 		return errors.Wrap(err, "could not parse version as a semver")
 	}
 
-	if err = os.RemoveAll(path.Join(config.GoenvRootDirectory, goVersion.Original())); err != nil {
+	if err = os.RemoveAll(path.Join(config.GoenvInstallDirectory, goVersion.Original())); err != nil {
 		return errors.Wrap(err, "could not uninstall go")
 	}
 

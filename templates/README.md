@@ -12,7 +12,7 @@ To install goenv, follow the steps below. Older releases are in the [Releases pa
 # Step 1: Linux Only
 curl -sSL https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-linux-amd64-XXLatestXX.tar.gz -o /tmp/goenv-XXLatestXX.tar.gz
 
-# Step 1: Mac Only
+# Step 1: Mac Only (Intel)
 curl -sSL https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-darwin-amd64-XXLatestXX.tar.gz -o /tmp/goenv-XXLatestXX.tar.gz
 
 # Step 2: Extract and Install Go
@@ -31,32 +31,47 @@ Calling `goenv` without any arguments will print out a helpful block of text, bu
 
 ```bash
 # Install and use a go version
-goenv install 1.14
+❯ goenv i 1.17
+✅ Downloaded and validated Go 1.17
+✅ Extracted package
+😎 Using go version go1.17 darwin/amd64
 
 # Use an installed version. This will fail if you don't have it installed.
-goenv use 1.17
+❯ goenv u 1.19
+😎 Using go version go1.19 darwin/amd64
 
-# Removes an installed version
-goenv uninstall 1.16
+# Removes an installed version and switches to another one if available
+❯ goenv rm 1.16
+😎 Using go version go1.17.8 linux/amd64
+😎 Uninstalled Go 1.16
 
 # Lists installed versions
-goenv list
+❯ goenv list
+Installed Versions:
+1.17: 1.17
+1.19: 1.19
+
+# Shows the go installation location.
+❯ goenv config
+GOENV_ROOT_DIR:    /Users/me/.local/go    (set by environment variable)
+GOENV_INSTALL_DIR: /Users/me/.local/goenv (set by environment variable)
 ```
 
 ## Configuration
 
 | Environment Variable  | Default             | Explanation |
 | -                     | -                   | - |
-| GOENV_ROOT_DIR        | "/usr/local/go"     | This is the default Go root. This is should be in your path and links to the `GOENV_INSTALL_DIR`. If you choose to set this, you must also set your `GOROOT` to this location. |
+| GOENV_ROOT_DIR        | "/usr/local/go"     | This is the defaults to the default Go root. This directory /bin should be in your path and links to the GOENV_INSTALL_DIR |
 | GOENV_INSTALL_DIR     | "/usr/local/goenv"  | Directory where your various Go installations will be installed |
 
-The default `GOROOT` usually requires root access. You can avoid it by setting the configuration variables above. Adding the following to your .zshrc, .bashrc, etc will avoid needing root access.
+The default `GOROOT` usually requires root access. You can avoid it by setting the configuration variables above. Adding the following to your .dotfiles will change the locations of the `GOENV_ROOT_DIR` and `GOENV_INSTALL_DIR`.
 
 ```shell
 # goenv configuration, mkdir $HOME/.local if it doesn't exist
 export GOENV_INSTALL_DIR="$HOME/.local/goenv"
 export GOENV_ROOT_DIR="$HOME/.local/go"
-export PATH="$GOENV_ROOT_DIR/bin:$PATH"
+export GOROOT="$GOENV_ROOT_DIR"
+export PATH="$GOROOT/bin:$PATH"
 ```
 
 If your VScode editor throws you weird errors on start up, add this to your vscode settings.json. This happens because of the non-default `GOROOT`.

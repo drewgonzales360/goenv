@@ -34,6 +34,8 @@ func CheckRW(config *Config) []string {
 	return accessDenied
 }
 
+// removeDeadLink checks if the go root is pointed at an uninstalled
+// go version. If that's the case, then we remove the goroot.
 func removeDeadLink(path string) error {
 	installDir, err := os.Readlink(path)
 	if err != nil {

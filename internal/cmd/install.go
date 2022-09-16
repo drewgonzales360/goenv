@@ -5,7 +5,6 @@ import (
 	"path"
 
 	"github.com/Masterminds/semver"
-	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
@@ -40,12 +39,12 @@ func install(config *pkg.Config, version string) error {
 
 	filePath, err := pkg.DownloadFile(goVersion)
 	if err != nil {
-		return errors.Wrap(err, "could not download go")
+		return fmt.Errorf("could not download go: %w", err)
 	}
 
 	err = pkg.ExtractTarGz(filePath, path.Join(config.GoenvInstallDirectory, goVersion.Original()))
 	if err != nil {
-		return errors.Wrap(err, "could not extract go")
+		return fmt.Errorf("could not extract go: %w", err)
 	}
 
 	return use(config, version)

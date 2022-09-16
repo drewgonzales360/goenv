@@ -15,7 +15,6 @@ import (
 
 	"github.com/Masterminds/semver"
 	"github.com/briandowns/spinner"
-	"github.com/pkg/errors"
 )
 
 const (
@@ -46,7 +45,7 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 	url, checksum := getDownloadInfo(v)
 	resp, err := http.Get(url)
 	if err != nil {
-		return "", errors.Wrap(err, fmt.Sprintf("url=%s", url))
+		return "", fmt.Errorf("could not download file from %s: %w", url, err)
 	}
 	defer resp.Body.Close()
 
@@ -118,12 +117,12 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 
 	r, err := os.Open(tarballPath)
 	if err != nil {
-		return errors.Wrap(err, "could not open tarball")
+		return fmt.Errorf("could not open tarball: %w", err)
 	}
 
 	uncompressedStream, err := gzip.NewReader(r)
 	if err != nil {
-		return errors.Wrap(err, "could not unzip file")
+		return fmt.Errorf("could not unzip file: %w", err)
 	}
 	defer uncompressedStream.Close()
 
@@ -135,36 +134,36 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 			break
 		}
 		if err != nil {
-			return errors.Wrap(err, "could not extract file")
+			return fmt.Errorf("could not extract file: %w", err)
 		}
 
 		extractionDestination := fmt.Sprintf("%s/%s", destinationPath, strings.TrimPrefix(header.Name, "go/"))
 		switch header.Typeflag {
 		case tar.TypeDir:
 			if err := os.MkdirAll(extractionDestination, 0755); err != nil {
-				return errors.Wrap(err, "could not create directory")
+				return fmt.Errorf("could not create directory: %w", err)
 			}
 		case tar.TypeReg:
 			outFile, err := os.Create(extractionDestination)
 			if err != nil {
-				return errors.Wrap(err, "could not create file")
+				return fmt.Errorf("could not create file: %w", err)
 			}
 			if _, err := io.Copy(outFile, tarReader); err != nil {
-				return errors.Wrap(err, "could not write to file")
+				return fmt.Errorf("could not write to file: %w", err)
 			}
 
 			err = os.Chmod(outFile.Name(), header.FileInfo().Mode())
 			if err != nil {
-				return errors.Wrap(err, "could not set extracted file permissions")
+				return fmt.Errorf("could not set extracted file permissions: %w", err)
 			}
 
 			outFile.Close()
 
 		default:
-			return errors.New(fmt.Sprintf(
-				"ExtractTarGz: uknown type: %s in %s",
+			return fmt.Errorf(
+				"unknown type: %s in %s",
 				header.Format,
-				header.Name))
+				header.Name)
 		}
 	}
 

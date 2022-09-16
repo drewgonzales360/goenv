@@ -93,8 +93,13 @@ The install directory `/usr/local/goenv` and root directory `/usr/local/go` is c
 
 ## Other Implementations
 
-There are a few other implementations of this that have more features, but I only needed the binaries. Other implementations can do fancier things like check for the correct Go version for a module and use the corresponding version when called, but they require intercepting the call to Go and passing the command to the right version. I didn't want my code to be in the "hot path."
+There are a few other implementations of this that have more features, this project believes in doing the most simple task to manage Go versions. Other implementations can do fancier things like check for the correct Go version for a module and use the corresponding version when called, but they require intercepting the call to Go and passing the command to the right version. Goenv avoids being in the "hot path."
 
 A few other implementations are also written in other languages. This one is written in Go 🥵.
 
-The recommendation on the Go website is to use your first install of Go to install _other_ versions of Go. Then you'd call other versions of Go like `go1.17.8 build`. This provides a consistent experience.
+The recommendation on the Go website is to use your first install of Go to install _other_ versions of Go. Then you'd call other versions of Go like `go1.17.8 build`. This provides a consistent experience when switching versions.
+
+Other tools:
+- [syndbg/goenv](https://github.com/syndbg/goenv)
+- [Spacewalkio/Goenv](https://github.com/Spacewalkio/Goenv)
+- [moovweb/gvm](https://github.com/moovweb/gvm)

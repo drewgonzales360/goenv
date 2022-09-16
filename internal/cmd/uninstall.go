@@ -6,7 +6,6 @@ import (
 	"path"
 
 	"github.com/Masterminds/semver"
-	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
@@ -57,11 +56,11 @@ func uninstall(config *pkg.Config, version string) error {
 	// Remove the old Go version
 	goVersion, err := semver.NewVersion(version)
 	if err != nil {
-		return errors.Wrap(err, "could not parse version as a semver")
+		return fmt.Errorf("could not parse version as a semver: %w", err)
 	}
 
 	if err = os.RemoveAll(path.Join(config.GoenvInstallDirectory, goVersion.Original())); err != nil {
-		return errors.Wrap(err, "could not uninstall go")
+		return fmt.Errorf("could not uninstall go: %w", err)
 	}
 
 	pkg.Success("Uninstalled Go " + goVersion.Original())

@@ -8,7 +8,6 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
-	"github.com/pkg/errors"
 	"github.com/urfave/cli/v2"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
@@ -38,7 +37,7 @@ func use(config *pkg.Config, version string) error {
 
 	goVersion, err := semver.NewVersion(version)
 	if err != nil {
-		return errors.Wrap(err, "could not parse version as a semver")
+		return fmt.Errorf("could not parse version as a semver: %w", err)
 	}
 
 	if err = link(config, goVersion); err != nil {
@@ -67,7 +66,7 @@ func link(config *pkg.Config, goVersion *semver.Version) error {
 	// Remove the old symlink
 	if _, err := os.Stat(config.GoenvRootDirectory); err == nil {
 		if err = os.Remove(config.GoenvRootDirectory); err != nil {
-			return errors.Wrap(err, "could not remove "+config.GoenvRootDirectory)
+			return fmt.Errorf("could not remove %s: %w", config.GoenvRootDirectory, err)
 		}
 	}
 
@@ -78,7 +77,7 @@ func link(config *pkg.Config, goVersion *semver.Version) error {
 	}
 
 	if err := os.Symlink(goInstallation, config.GoenvRootDirectory); err != nil {
-		return errors.Wrap(err, "could not link")
+		return fmt.Errorf("could not link: %w", err)
 	}
 
 	return nil

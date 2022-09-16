@@ -1,7 +1,7 @@
 .EXPORT_ALL_VARIABLES:
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
-SEMVER=v0.0.4
+SEMVER=v0.1.0
 VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 
 # Builds target for whatever OS this is called from.

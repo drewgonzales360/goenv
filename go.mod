@@ -6,7 +6,6 @@ require (
 	github.com/Masterminds/semver v1.5.0
 	github.com/briandowns/spinner v1.19.0
 	github.com/fatih/color v1.13.0
-	github.com/pkg/errors v0.9.1
 	github.com/urfave/cli/v2 v2.16.3
 )
 

@@ -26,13 +26,13 @@ func main() {
 			},
 		},
 		Version:   semver.MustParse(Semver).Original(),
-		Usage:     "Manages multiple go versions for linux. See https://go.dev/dl for available versions.",
+		Usage:     "Manages multiple Go versions. See https://go.dev/dl for available versions.",
 		UsageText: fmt.Sprintf("%s <command> [version]", appName),
 		Commands: []*cli.Command{
 			{
 				Name:      "install",
 				Usage:     "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
-				UsageText: fmt.Sprintf("%s install [version]", appName),
+				UsageText: fmt.Sprintf("ex: %s install 1.19.1", appName),
 				Aliases:   []string{"i"},
 				Before:    cmd.BeforeActionParseConfig,
 				Action:    cmd.InstallCommand,
@@ -40,7 +40,7 @@ func main() {
 			{
 				Name:      "uninstall",
 				Usage:     "Uninstall a Go version",
-				UsageText: fmt.Sprintf("%s uninstall [version]", appName),
+				UsageText: fmt.Sprintf("ex: %s uninstall 1.17", appName),
 				Aliases:   []string{"rm"},
 				Before:    cmd.BeforeActionParseConfig,
 				Action:    cmd.UninstallCommand,
@@ -48,23 +48,25 @@ func main() {
 			{
 				Name:      "use",
 				Usage:     "Use a Go version",
-				UsageText: fmt.Sprintf("%s use [version]", appName),
+				UsageText: fmt.Sprintf("ex: %s use 1.18", appName),
 				Aliases:   []string{"u"},
 				Before:    cmd.BeforeActionParseConfig,
 				Action:    cmd.UseCommand,
 			},
 			{
 				Name:    "list",
-				Usage:   "List all available Go versions",
+				Usage:   "List available Go versions",
 				Aliases: []string{"ls", "l"},
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
 						Name:    "stable",
 						Aliases: []string{"s"},
+						Usage:   "lists all actively maintained versions of Go",
 					},
 					&cli.BoolFlag{
 						Name:    "all",
 						Aliases: []string{"a"},
+						Usage:   "lists all versions of Go",
 					},
 				},
 				Before: cmd.BeforeActionParseConfig,

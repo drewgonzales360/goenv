@@ -36,14 +36,18 @@ type File struct {
 	Uploaded       time.Time `json:"-"`
 }
 
+type releaseData struct {
+	Releases []Release `json:"releases"`
+	Updated  string    `json:"updated"`
+}
+
 // GetGoVersions queries the go.dev/dl for the current releases. The latest patch
 // versions of the latest two minor versions are considered stable. If you want
 // all releases of Go, pass in true.
 func GetGoVersions(getAllVersions bool) ([]Release, error) {
-	includeAll := "&include=all"
 	goDevURL := "https://go.dev/dl/?mode=json"
 	if getAllVersions {
-		goDevURL = goDevURL + includeAll
+		goDevURL = goDevURL + "&include=all"
 	}
 
 	resp, err := http.DefaultClient.Get(goDevURL)

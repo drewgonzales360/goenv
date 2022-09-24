@@ -22,6 +22,10 @@ const (
 	// This should also be the users GOROOT.
 	GoEnvRootDirEnvVar    = "GOENV_ROOT_DIR"
 	GoEnvInstallDirEnvVar = "GOENV_INSTALL_DIR"
+
+	// Used to let the user know how a config variable was set.
+	configSetByDefault = "\t(default)\n"
+	configSetByEnv     = "\t(set by environment variable)\n"
 )
 
 // ReadConfig reads the environment variables for a user and creates
@@ -49,17 +53,17 @@ func (c *Config) String() string {
 
 	rootDir := fmt.Sprintf("%s:\t%s", GoEnvRootDirEnvVar, c.GoenvRootDirectory)
 	if c.GoenvRootDirectory == DefaultGoenvRootDirectory {
-		rootDir += "\t(default)\n"
+		rootDir += configSetByDefault
 	} else {
-		rootDir += "\t(set by environment variable)\n"
+		rootDir += configSetByEnv
 	}
 	w.Write([]byte(rootDir))
 
 	installDir := fmt.Sprintf("%s:\t%s", GoEnvInstallDirEnvVar, c.GoenvInstallDirectory)
 	if c.GoenvInstallDirectory == DefaultGoInstallDirectory {
-		installDir += "\t(default)\n"
+		installDir += configSetByDefault
 	} else {
-		installDir += "\t(set by environment variable)\n"
+		installDir += configSetByEnv
 	}
 	w.Write([]byte(installDir))
 	w.Flush()

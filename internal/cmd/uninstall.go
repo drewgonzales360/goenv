@@ -28,33 +28,13 @@ func UninstallCommand(c *cli.Context) error {
 	return nil
 }
 
-func uninstall(config *pkg.Config, version string) error {
+func uninstall(config *pkg.Config, versionToDelete string) error {
 	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
-	// Use another version
-	versions, err := os.ReadDir(config.GoenvInstallDirectory)
-	if err != nil {
-		return err
-	}
-
-	if len(versions) < 2 {
-		pkg.Warn("no other installed go versions")
-	}
-
-	for i := range versions {
-		defaultVersion := versions[i].Name()
-		if defaultVersion != version {
-			if err := use(config, defaultVersion); err == nil {
-				break
-			}
-			pkg.Debug(fmt.Sprintf("could not default to %s: %s", defaultVersion, err))
-		}
-	}
-
 	// Remove the old Go version
-	goVersion, err := semver.NewVersion(version)
+	goVersion, err := semver.NewVersion(versionToDelete)
 	if err != nil {
 		return fmt.Errorf("could not parse version as a semver: %w", err)
 	}
@@ -64,5 +44,21 @@ func uninstall(config *pkg.Config, version string) error {
 	}
 
 	pkg.Success("Uninstalled Go " + goVersion.Original())
+
+	// Use another version
+	versions, err := os.ReadDir(config.GoenvInstallDirectory)
+	if err != nil {
+		return err
+	}
+	if len(versions) == 0 {
+		pkg.Warn("no other installed go versions")
+		return nil
+	}
+
+	defaultVersion := versions[len(versions)-1].Name()
+	if err := use(config, defaultVersion); err == nil {
+		pkg.Debug(fmt.Sprintf("could not default to %s: %s", defaultVersion, err))
+	}
+
 	return nil
 }

@@ -27,6 +27,7 @@ banner "do we warn for non sudo when switching versions?"
 (set -x; goenv use 1.18)
 
 banner "can we install another version"
+(set -x; sudo goenv install 1.19.1)
 (set -x; sudo goenv install 1.18.1)
 
 banner "can we remove versions"
@@ -34,12 +35,13 @@ banner "can we remove versions"
 (set -x; sudo goenv rm 1.18)
 (set -x; goenv ls)
 
-banner "do we switch to another version when the one we're using is removed?"
+banner "do we switch to the latest version when the one we're using is removed?"
 (set -x; goenv ls)
 (set -x; sudo goenv rm 1.18.1)
 (set -x; goenv ls)
 
 banner "do we warn when there are no more versions of go left?"
 (set -x; goenv ls)
-(set -x; sudo goenv rm 1.17.8)
+(sudo goenv rm 1.17.8)
+(set -x; sudo goenv rm 1.19.1)
 (set -x; goenv ls)

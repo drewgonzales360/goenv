@@ -9,7 +9,7 @@ VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 build:
 	go build -ldflags="-X 'main.Semver=${VERSION}'"
 
-install:
+install: build
 	mv goenv /usr/local/bin
 
 build-linux:
@@ -19,15 +19,9 @@ build-darwin:
 	GOOS=darwin go build -ldflags="-X 'main.Semver=${VERSION}'"
 
 # Runs a script to test basic, happy-path functionality inside the container
-test-ubuntu: build-linux
-	docker build -f images/Ubuntu -t goenv-ubuntu .
+test: build-linux
+	docker build -t goenv-ubuntu .
 	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv-ubuntu
-
-test-alpine: build-linux
-	docker build -f images/Alpine -t goenv-alpine .
-	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv-alpine
-
-test: test-alpine test-ubuntu
 
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions
 # is much safer in the container than it is on your local machine. It is short for interactive.

@@ -26,7 +26,7 @@ test: build-linux
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions
 # is much safer in the container than it is on your local machine. It is short for interactive.
 it:
-	docker run --rm -it -e GOENV_LOG=DEBUG goenv-alpine
+	docker run --rm -it -e GOENV_LOG=DEBUG goenv-ubuntu
 
 # This creates a github release, but requires the caller to be properly authenticated
 # Only I, drewgonzales360, can create releases right now.

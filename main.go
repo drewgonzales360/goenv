@@ -26,7 +26,7 @@ func main() {
 			},
 		},
 		Version:   semver.MustParse(Semver).Original(),
-		Usage:     "Manages multiple Go versions. See https://go.dev/dl for available versions.",
+		Usage:     "Manages multiple Go versions. See https://go.dev/dl for available versions or `goenv ls -s`.",
 		UsageText: fmt.Sprintf("%s <command> [version]", appName),
 		Commands: []*cli.Command{
 			{
@@ -39,7 +39,7 @@ func main() {
 			},
 			{
 				Name:      "uninstall",
-				Usage:     "Uninstall a Go version",
+				Usage:     "Uninstall a Go version.",
 				UsageText: fmt.Sprintf("ex: %s uninstall 1.17", appName),
 				Aliases:   []string{"rm"},
 				Before:    cmd.BeforeActionParseConfig,
@@ -47,7 +47,7 @@ func main() {
 			},
 			{
 				Name:      "use",
-				Usage:     "Use a Go version",
+				Usage:     "Use a Go version.",
 				UsageText: fmt.Sprintf("ex: %s use 1.18", appName),
 				Aliases:   []string{"u"},
 				Before:    cmd.BeforeActionParseConfig,
@@ -55,7 +55,7 @@ func main() {
 			},
 			{
 				Name:    "list",
-				Usage:   "List available Go versions",
+				Usage:   "List available Go versions.",
 				Aliases: []string{"ls", "l"},
 				Flags: []cli.Flag{
 					&cli.BoolFlag{
@@ -80,7 +80,9 @@ func main() {
 				Action:  cmd.ConfigCommand,
 			},
 		},
-		HideHelpCommand: true,
+		HideHelpCommand:        true,
+		UseShortOptionHandling: true,
+		Suggest:                true,
 	}
 
 	if err := app.Run(os.Args); err != nil {

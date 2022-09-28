@@ -19,7 +19,6 @@ const (
 	DefaultGoenvRootDirectory = "/usr/local/go"
 	DefaultGoInstallDirectory = "/usr/local/goenv"
 
-	// This should also be the users GOROOT.
 	GoEnvRootDirEnvVar    = "GOENV_ROOT_DIR"
 	GoEnvInstallDirEnvVar = "GOENV_INSTALL_DIR"
 

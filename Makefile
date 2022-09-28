@@ -9,7 +9,7 @@ VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 build:
 	go build -ldflags="-X 'main.Semver=${VERSION}'"
 
-install: build
+install:
 	mv goenv /usr/local/bin
 
 build-linux:
@@ -18,15 +18,17 @@ build-linux:
 build-darwin:
 	GOOS=darwin go build -ldflags="-X 'main.Semver=${VERSION}'"
 
+image: build-linux
+	docker build -t goenv .
+
 # Runs a script to test basic, happy-path functionality inside the container
-test: build-linux
-	docker build -t goenv-ubuntu .
-	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv-ubuntu
+test: image
+	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv
 
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions
 # is much safer in the container than it is on your local machine. It is short for interactive.
 it:
-	docker run --rm -it -e GOENV_LOG=DEBUG goenv-alpine
+	docker run --rm -it -e GOENV_LOG=DEBUG goenv
 
 # This creates a github release, but requires the caller to be properly authenticated
 # Only I, drewgonzales360, can create releases right now.

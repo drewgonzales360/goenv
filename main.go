@@ -26,7 +26,7 @@ func main() {
 			},
 		},
 		Version:   semver.MustParse(Semver).Original(),
-		Usage:     "Manages multiple Go versions. See https://go.dev/dl for available versions.",
+		Usage:     "Manages multiple Go versions. See https://go.dev/dl for available versions or goenv list -s.",
 		UsageText: fmt.Sprintf("%s <command> [version]", appName),
 		Commands: []*cli.Command{
 			{
@@ -78,6 +78,18 @@ func main() {
 				Aliases: []string{"c"},
 				Before:  cmd.BeforeActionParseConfig,
 				Action:  cmd.ConfigCommand,
+			},
+		},
+		Flags: []cli.Flag{
+			&cli.PathFlag{
+				Name:    string(cmd.RootDirContextKey),
+				EnvVars: []string{pkg.GoEnvRootDirEnvVar},
+				Value:   pkg.DefaultGoenvRootDirectory,
+			},
+			&cli.PathFlag{
+				Name:    string(cmd.InstallDirContextKey),
+				EnvVars: []string{pkg.GoEnvInstallDirEnvVar},
+				Value:   pkg.DefaultGoInstallDirectory,
 			},
 		},
 		HideHelpCommand: true,

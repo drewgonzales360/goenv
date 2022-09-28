@@ -14,8 +14,10 @@ import (
 type GoEnvContextKey string
 
 const (
-	PermError string          = "you do not have access to %v"
-	config    GoEnvContextKey = "config"
+	PermError            string          = "you do not have access to %v"
+	configContextKey     GoEnvContextKey = "config"
+	RootDirContextKey    string          = "root-dir"
+	InstallDirContextKey string          = "install-dir"
 )
 
 func parseVersionArg(c *cli.Context) (string, error) {
@@ -26,16 +28,20 @@ func parseVersionArg(c *cli.Context) (string, error) {
 }
 
 func parseConfig(c *cli.Context) (*pkg.Config, error) {
-	config, ok := c.Context.Value(config).(*pkg.Config)
+	config, ok := c.Context.Value(configContextKey).(*pkg.Config)
 	if !ok {
 		return nil, fmt.Errorf("could not create config")
 	}
 	return config, nil
 }
 
-func BeforeActionParseConfig(c *cli.Context) error {
-	c.Context = context.WithValue(c.Context, config, pkg.ReadConfig())
-	pkg.Debug(fmt.Sprintf("Config:\n%+v", pkg.ReadConfig()))
+func BeforeActionParseConfig(ctx *cli.Context) error {
+	config := &pkg.Config{
+		GoenvInstallDirectory: ctx.Path(InstallDirContextKey),
+		GoenvRootDirectory:    ctx.Path(RootDirContextKey),
+	}
+	pkg.Debug(fmt.Sprintf("Config:\n%+v", config))
+	ctx.Context = context.WithValue(ctx.Context, configContextKey, config)
 	return nil
 }
 

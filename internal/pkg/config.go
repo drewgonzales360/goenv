@@ -3,7 +3,6 @@ package pkg
 import (
 	"bytes"
 	"fmt"
-	"os"
 	"text/tabwriter"
 )
 
@@ -27,25 +26,6 @@ const (
 	configSetByDefault = "\t(default)\n"
 	configSetByEnv     = "\t(set by environment variable)\n"
 )
-
-// ReadConfig reads the environment variables for a user and creates
-// a config. If we need any additional config, it'll be parsed in here.
-func ReadConfig() *Config {
-	rootDir := os.Getenv(GoEnvRootDirEnvVar)
-	if rootDir == "" {
-		rootDir = DefaultGoenvRootDirectory
-	}
-
-	installDir := os.Getenv(GoEnvInstallDirEnvVar)
-	if installDir == "" {
-		installDir = DefaultGoInstallDirectory
-	}
-
-	return &Config{
-		rootDir,
-		installDir,
-	}
-}
 
 func (c *Config) String() string {
 	buf := bytes.Buffer{}

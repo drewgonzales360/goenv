@@ -1,25 +1,25 @@
-.EXPORT_ALL_VARIABLES:
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
-SEMVER=v0.1.0
+SEMVER=v0.1.1
 VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
+GOOS?=$(shell uname | tr '[:upper:]' '[:lower:]')
+GOARCH?=$(shell uname -m | sed 's/x86_64/amd64/')
 
 # Builds target for whatever OS this is called from.
 # go tool nm ./goenv
 build:
-	go build -ldflags="-X 'main.Semver=${VERSION}'"
+	@echo [info] building goenv for ${GOOS}-${GOARCH}
+	@go build -ldflags="-X 'main.Semver=${VERSION}'"
+
+tar: build
+	@tar -czf tmp/goenv-${GOOS}-${GOARCH}-${SEMVER}.tar.gz ./goenv
 
 install: build
 	mv goenv /usr/local/bin
 
-build-linux:
-	GOOS=linux go build -ldflags="-X 'main.Semver=${VERSION}'"
-
-build-darwin:
-	GOOS=darwin go build -ldflags="-X 'main.Semver=${VERSION}'"
-
 # Runs a script to test basic, happy-path functionality inside the container
-test: build-linux
+test:
+	GOOS=linux go build -ldflags="-X 'main.Semver=${VERSION}'"
 	docker build -t goenv-ubuntu .
 	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv-ubuntu
 
@@ -32,13 +32,12 @@ it:
 # Only I, drewgonzales360, can create releases right now.
 release:
 	@if ! [ -d tmp ]; then mkdir tmp; fi
-	@GOOS=linux make build
-	@tar -czf tmp/goenv-linux-amd64-${SEMVER}.tar.gz ./goenv
-	@GOOS=darwin make build
-	@tar -czf tmp/goenv-darwin-amd64-${SEMVER}.tar.gz ./goenv
+	@GOOS=linux GOARCH=amd64 make tar
+	@GOOS=linux GOARCH=arm64 make tar
+	@GOOS=darwin GOARCH=amd64 make tar
+	@GOOS=darwin GOARCH=arm64 make tar
 	@git tag ${SEMVER}
 	gh release create --notes "Release ${VERSION}" --target main ${SEMVER} tmp/goenv-*-amd64-${SEMVER}.tar.gz
-
 readme:
 	@sed "s/XXLatestXX/${SEMVER}/g" < templates/README.md > README.md
 

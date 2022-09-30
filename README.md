@@ -65,14 +65,11 @@ GOENV_INSTALL_DIR: /Users/me/.local/goenv (set by environment variable)
 To install goenv, follow the steps below. Older releases are in the [Releases page](https://github.com/drewgonzales360/goenv/releases).
 
 ```bash
-# Step 1: Linux Only
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/v0.1.0/goenv-linux-amd64-v0.1.0.tar.gz -o /tmp/goenv-v0.1.0.tar.gz
-
-# Step 1: Mac Only (Intel)
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/v0.1.0/goenv-darwin-amd64-v0.1.0.tar.gz -o /tmp/goenv-v0.1.0.tar.gz
+# Step 1: Download Goenv for your unix based system
+curl -sSL https://github.com/drewgonzales360/goenv/releases/download/v0.1.1/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.1.1.tar.gz -o /tmp/goenv-v0.1.1.tar.gz
 
 # Step 2: Extract and Install Go
-tar -xzvf /tmp/goenv-v0.1.0.tar.gz -C /tmp
+tar -xzvf /tmp/goenv-v0.1.1.tar.gz -C /tmp
 mv /tmp/goenv /usr/local/bin
 
 # Step 3: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH

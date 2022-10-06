@@ -17,7 +17,7 @@ USAGE:
    goenv <command> [version]
 
 VERSION:
-   v0.1.0+7a5bcdd
+   XXLatestXX+7a5bcdd
 
 AUTHOR:
    Drew Gonzales <github.com/drewgonzales360>
@@ -65,14 +65,10 @@ GOENV_INSTALL_DIR: /Users/me/.local/goenv (set by environment variable)
 To install goenv, follow the steps below. Older releases are in the [Releases page](https://github.com/drewgonzales360/goenv/releases).
 
 ```bash
-# Step 1: Download Goenv for your unix based system
-curl -sSL https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-XXLatestXX.tar.gz -o /tmp/goenv-XXLatestXX.tar.gz
+# Step 1: Download Goenv for your unix based system and add it to /usr/local/bin
+curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-XXLatestXX.tar.gz" | sudo tar -xzv -C /usr/local/bin
 
-# Step 2: Extract and Install Go
-tar -xzvf /tmp/goenv-XXLatestXX.tar.gz -C /tmp
-mv /tmp/goenv /usr/local/bin
-
-# Step 3: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH
+# Step 2: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH
 export PATH=/usr/local/go/bin:PATH
 ```
 

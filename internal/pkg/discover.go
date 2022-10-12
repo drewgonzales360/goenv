@@ -14,6 +14,8 @@ import (
 
 type ChecksumSHA256 string
 
+const HttpRequestTimeout = 10
+
 // This comes from https://github.com/golang/website/blob/master/internal/dl/dl.go
 type Release struct {
 	Version        string `json:"version"`
@@ -50,7 +52,8 @@ func GetGoVersions(getAllVersions bool) ([]Release, error) {
 		goDevURL = goDevURL + "&include=all"
 	}
 
-	resp, err := http.DefaultClient.Get(goDevURL)
+	client := http.Client{Timeout: time.Second * HttpRequestTimeout}
+	resp, err := client.Get(goDevURL)
 	if err != nil {
 		return nil, fmt.Errorf("could not get go versions: %w", err)
 	}

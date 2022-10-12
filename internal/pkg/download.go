@@ -43,7 +43,8 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 	defer s.Stop()
 
 	url, checksum := getDownloadInfo(v)
-	resp, err := http.Get(url)
+	client := http.Client{Timeout: time.Second * HttpRequestTimeout}
+	resp, err := client.Get(url)
 	if err != nil {
 		return "", fmt.Errorf("could not download file from %s: %w", url, err)
 	}

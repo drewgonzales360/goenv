@@ -38,11 +38,6 @@ type File struct {
 	Uploaded       time.Time `json:"-"`
 }
 
-type releaseData struct {
-	Releases []Release `json:"releases"`
-	Updated  string    `json:"updated"`
-}
-
 // GetGoVersions queries the go.dev/dl for the current releases. The latest patch
 // versions of the latest two minor versions are considered stable. If you want
 // all releases of Go, pass in true.
@@ -94,15 +89,14 @@ func getDownloadInfo(v *semver.Version) (url string, checkSum ChecksumSHA256) {
 				if file.Arch == runtime.GOARCH && file.OS == runtime.GOOS && file.Kind == "archive" {
 					checkSum = ChecksumSHA256(file.ChecksumSHA256)
 					url = fmt.Sprintf("https://go.dev/dl/%s", file.Filename)
+					return url, checkSum
 				}
 			}
 		}
 	}
 
-	if url == "" {
-		Error("could not find release")
-	}
-	return url, checkSum
+	Warn("could not find release")
+	return defaultDownloadURL(v), ""
 }
 
 // defaultDownloadURL assumes the format and URL of the tarball we
@@ -115,7 +109,7 @@ func defaultDownloadURL(v *semver.Version) string {
 	if os != "linux" && os != "darwin" {
 		Debug(fmt.Sprintf("Running an unsupported os: %s", os))
 	}
-	if arch != "amd64" {
+	if arch != "amd64" && arch != "arm64" {
 		Debug(fmt.Sprintf("Running an unsupported arch: %s", arch))
 	}
 
@@ -137,6 +131,12 @@ func toLooseGoVersion(v *semver.Version) string {
 	return urlVersion
 }
 
+// ListAvailableVersions reads all available versions of Go that can
+// be installed. It queries go.dev for what's available. By default,
+// it'll return only the latest patches of the two most recent minor
+// versions. For example:
+// 1.18: 1.18.7
+// 1.19: 1.19.2
 func ListAvailableVersions(getAllVersions bool) ([]string, error) {
 	releases, err := GetGoVersions(getAllVersions)
 	if err != nil {

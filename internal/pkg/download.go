@@ -22,10 +22,9 @@ const (
 	tempDir = "/tmp/goenv"
 )
 
-var seededRand *rand.Rand = rand.New(
-	rand.NewSource(time.Now().UnixNano()))
-
+// randomString returns 6 random characters from charset.
 func randomString() string {
+	seededRand := rand.New(rand.NewSource(time.Now().UnixNano()))
 	b := make([]byte, 6)
 	for i := range b {
 		b[i] = charset[seededRand.Intn(len(charset))]

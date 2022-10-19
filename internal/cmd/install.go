@@ -24,6 +24,7 @@ func InstallCommand(c *cli.Context) error {
 	if err := install(config, version); err != nil {
 		return err
 	}
+
 	return nil
 }
 
@@ -34,7 +35,7 @@ func install(config *pkg.Config, version string) error {
 
 	goVersion, err := semver.NewVersion(version)
 	if err != nil {
-		return fmt.Errorf("could not parse version as a semver")
+		return fmt.Errorf("could not parse %s: %w", version, err)
 	}
 
 	filePath, err := pkg.DownloadFile(goVersion)
@@ -47,5 +48,10 @@ func install(config *pkg.Config, version string) error {
 		return fmt.Errorf("could not extract go: %w", err)
 	}
 
-	return use(config, version)
+	err = use(config, version)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

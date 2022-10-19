@@ -36,7 +36,7 @@ func uninstall(config *pkg.Config, versionToDelete string) error {
 	// Remove the old Go version
 	goVersion, err := semver.NewVersion(versionToDelete)
 	if err != nil {
-		return fmt.Errorf("could not parse version as a semver: %w", err)
+		return fmt.Errorf("could not parse %s: %w", versionToDelete, err)
 	}
 
 	if err = os.RemoveAll(path.Join(config.GoenvInstallDirectory, goVersion.Original())); err != nil {

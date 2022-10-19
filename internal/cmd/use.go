@@ -37,7 +37,7 @@ func use(config *pkg.Config, version string) error {
 
 	goVersion, err := semver.NewVersion(version)
 	if err != nil {
-		return fmt.Errorf("could not parse version as a semver: %w", err)
+		return fmt.Errorf("could not parse %s: %w", version, err)
 	}
 
 	if err = link(config, goVersion); err != nil {

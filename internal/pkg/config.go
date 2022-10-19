@@ -46,6 +46,8 @@ func ReadConfig() *Config {
 	}
 }
 
+// String prints the config to a tabwriter so that the columns are aligned when it's
+// fmt.Print'ed to the terminal.
 func (c *Config) String() string {
 	buf := bytes.Buffer{}
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', 0)
@@ -65,6 +67,8 @@ func (c *Config) String() string {
 		installDir += configSetByEnv
 	}
 	w.Write([]byte(installDir))
+
 	w.Flush()
+
 	return buf.String()
 }

@@ -1,6 +1,6 @@
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
-SEMVER=v0.1.1
+SEMVER=v0.1.2
 VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 GOOS?=$(shell uname | tr '[:upper:]' '[:lower:]')
 GOARCH?=$(shell uname -m | sed 's/x86_64/amd64/')

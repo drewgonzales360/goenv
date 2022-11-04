@@ -35,6 +35,7 @@ func main() {
 				UsageText: fmt.Sprintf("ex: %s install 1.19.1", appName),
 				Aliases:   []string{"i"},
 				Before:    cmd.BeforeActionParseConfig,
+				After:     cmd.AfterAction,
 				Action:    cmd.InstallCommand,
 			},
 			{
@@ -43,6 +44,7 @@ func main() {
 				UsageText: fmt.Sprintf("ex: %s uninstall 1.17", appName),
 				Aliases:   []string{"rm"},
 				Before:    cmd.BeforeActionParseConfig,
+				After:     cmd.AfterAction,
 				Action:    cmd.UninstallCommand,
 			},
 			{
@@ -51,6 +53,7 @@ func main() {
 				UsageText: fmt.Sprintf("ex: %s use 1.18", appName),
 				Aliases:   []string{"u"},
 				Before:    cmd.BeforeActionParseConfig,
+				After:     cmd.AfterAction,
 				Action:    cmd.UseCommand,
 			},
 			{
@@ -70,6 +73,7 @@ func main() {
 					},
 				},
 				Before: cmd.BeforeActionParseConfig,
+				After:  cmd.AfterAction,
 				Action: cmd.ListCommand,
 			},
 			{
@@ -77,6 +81,7 @@ func main() {
 				Usage:   "Prints the current config.",
 				Aliases: []string{"c"},
 				Before:  cmd.BeforeActionParseConfig,
+				After:   cmd.AfterAction,
 				Action:  cmd.ConfigCommand,
 			},
 		},

@@ -33,7 +33,7 @@ func CreateGoVersionList(directories []string) map[string][]string {
 
 // Print will nicely display the installed and available versions of
 // Go you can install to the terminal.
-func Print(g map[string][]string) {
+func Print(g map[string][]string, linePrefix string) {
 	keys := make([]string, 0, len(g))
 	for k := range g {
 		keys = append(keys, k)
@@ -41,7 +41,7 @@ func Print(g map[string][]string) {
 	m := sortSemvers(keys)
 
 	for _, key := range m {
-		color.New(color.FgHiBlack).Printf("%s: ", key.Original())
+		color.New(color.FgHiBlack).Printf("%s%s: ", linePrefix, key.Original())
 
 		l := sortSemvers(g[key.Original()])
 		sa := mapToOriginal(l)
@@ -49,12 +49,15 @@ func Print(g map[string][]string) {
 	}
 }
 
+// sortSemvers maps the raw strings into semver.Versions
+// then sorts it.
 func sortSemvers(raw []string) []*semver.Version {
 	vs := make([]*semver.Version, len(raw))
 	for i, r := range raw {
 		v, err := semver.NewVersion(r)
 		if err != nil {
 			Error(fmt.Sprintf("could not parse semver: %s %s", err.Error(), r))
+			continue
 		}
 
 		vs[i] = v
@@ -64,6 +67,7 @@ func sortSemvers(raw []string) []*semver.Version {
 	return vs
 }
 
+// mapToOriginal turns the semver.Versions back into strings.
 func mapToOriginal(vs []*semver.Version) (sa []string) {
 	for _, v := range vs {
 		sa = append(sa, v.Original())

@@ -14,7 +14,7 @@ import (
 
 type ChecksumSHA256 string
 
-const HttpRequestTimeout = 10
+const HttpRequestTimeout = 15
 
 // This comes from https://github.com/golang/website/blob/master/internal/dl/dl.go
 type Release struct {
@@ -38,10 +38,10 @@ type File struct {
 	Uploaded       time.Time `json:"-"`
 }
 
-// GetGoVersions queries the go.dev/dl for the current releases. The latest patch
+// getGoVersions queries the go.dev/dl for the current releases. The latest patch
 // versions of the latest two minor versions are considered stable. If you want
 // all releases of Go, pass in true.
-func GetGoVersions(getAllVersions bool) ([]Release, error) {
+func getGoVersions(getAllVersions bool) ([]Release, error) {
 	goDevURL := "https://go.dev/dl/?mode=json"
 	if getAllVersions {
 		goDevURL = goDevURL + "&include=all"
@@ -76,7 +76,7 @@ func GetGoVersions(getAllVersions bool) ([]Release, error) {
 // and their shasums. If we can't reach it, default to the well known formats
 // and locations of the tarballs.
 func getDownloadInfo(v *semver.Version) (url string, checkSum ChecksumSHA256) {
-	releases, err := GetGoVersions(true)
+	releases, err := getGoVersions(true)
 	if err != nil {
 		Debug("could not query go.dev for shasums, defaulting to best effort")
 		return defaultDownloadURL(v), ""
@@ -138,7 +138,7 @@ func toLooseGoVersion(v *semver.Version) string {
 // 1.18: 1.18.7
 // 1.19: 1.19.2
 func ListAvailableVersions(getAllVersions bool) ([]string, error) {
-	releases, err := GetGoVersions(getAllVersions)
+	releases, err := getGoVersions(getAllVersions)
 	if err != nil {
 		return nil, err
 	}

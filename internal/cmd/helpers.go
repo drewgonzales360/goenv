@@ -18,6 +18,8 @@ const (
 	config    GoEnvContextKey = "config"
 )
 
+// parseVersionArg ensures that the subcommands that accept a parameter
+// only spcify one parameter.
 func parseVersionArg(c *cli.Context) (string, error) {
 	if c.NArg() != 1 {
 		return "", fmt.Errorf("this command only accepts one parameter")
@@ -25,6 +27,8 @@ func parseVersionArg(c *cli.Context) (string, error) {
 	return c.Args().First(), nil
 }
 
+// parseConfig reads the config from the context, assuming that BeforeActionParseConfig
+// puts the config *in* the context.
 func parseConfig(c *cli.Context) (*pkg.Config, error) {
 	config, ok := c.Context.Value(config).(*pkg.Config)
 	if !ok {
@@ -33,12 +37,22 @@ func parseConfig(c *cli.Context) (*pkg.Config, error) {
 	return config, nil
 }
 
+// BeforeActionParseConfig adds the config to the context so it can be read
+// by parseConfig.
 func BeforeActionParseConfig(c *cli.Context) error {
 	c.Context = context.WithValue(c.Context, config, pkg.ReadConfig())
-	pkg.Debug(fmt.Sprintf("Config:\n%+v", pkg.ReadConfig()))
 	return nil
 }
 
+// AfterAction checks for new versions of Goenv and Go.
+func AfterAction(c *cli.Context) error {
+	pkg.CheckLatestGoenv(c.App.Version)
+	pkg.CheckLatestGo()
+	return nil
+}
+
+// warnOnMissingPath does a best effort to let you know that Go can't be called.
+// This will sometimes warn unnecessarily if the user runs as root.
 func warnOnMissingPath(config *pkg.Config) {
 	bin := config.GoenvRootDirectory + "/bin"
 	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {

@@ -26,7 +26,7 @@ func ListCommand(c *cli.Context) error {
 	}
 	installed := pkg.CreateGoVersionList(names)
 	color.New(color.FgCyan, color.Bold).Println("Installed Versions:")
-	pkg.Print(installed)
+	pkg.Print(installed, "")
 
 	all := c.Bool("all")
 	printAvailable := c.Bool("stable") || all
@@ -38,7 +38,7 @@ func ListCommand(c *cli.Context) error {
 		}
 
 		gvl := pkg.CreateGoVersionList(versions)
-		pkg.Print(gvl)
+		pkg.Print(gvl, "")
 	}
 
 	return nil

@@ -85,9 +85,7 @@ func main() {
 		PostRunE: cmd.PostRunE,
 	}
 
-	rootCmd := &cobra.Command{
-		Version: Semver,
-	}
+	rootCmd := &cobra.Command{Version: Semver}
 	rootCmd.AddCommand(installCmd, uninstallCmd, useCmd, listCmd, configCmd)
 
 	rootCmd.Execute()

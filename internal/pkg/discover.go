@@ -29,7 +29,7 @@ import (
 
 type ChecksumSHA256 string
 
-const HttpRequestTimeout = 15
+const HttpRequestTimeout = 30
 
 // This comes from https://github.com/golang/website/blob/master/internal/dl/dl.go
 type Release struct {

@@ -18,4 +18,14 @@ if ! go build 2> /dev/null; then
     fail "build failed. review code and try again"
 fi
 
+# Check format
+INITIAL_STATUS="$(git status -s | shasum)"
+go fmt
+go mod tidy
+make readme
+TERMINAL_STATUS="$(git status -s | shasum)"
+if [[ "${INITIAL_STATUS}" != "${TERMINAL_STATUS}" ]]; then
+    fail "ran go fmt, go mod tidy, and make readme. review changes and try again"
+fi
+
 echo -e "${GREEN}[success] ran pre-commit hook${CLEAR_COLOR}"

@@ -19,16 +19,13 @@ import (
 	"os"
 
 	"github.com/fatih/color"
-	"github.com/urfave/cli/v2"
+	"github.com/spf13/cobra"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
-func ListCommand(c *cli.Context) error {
-	config, err := parseConfig(c)
-	if err != nil {
-		return err
-	}
+func ListCommand(cmd *cobra.Command, args []string) error {
+	config := ReadConfig()
 
 	versions, err := os.ReadDir(config.GoenvInstallDirectory)
 	if err != nil {
@@ -43,8 +40,17 @@ func ListCommand(c *cli.Context) error {
 	color.New(color.FgCyan, color.Bold).Println("Installed Versions:")
 	pkg.Print(installed, "")
 
-	all := c.Bool("all")
-	printAvailable := c.Bool("stable") || all
+	all, err := cmd.Flags().GetBool("all")
+	if err != nil {
+		return err
+	}
+
+	stable, err := cmd.Flags().GetBool("stable")
+	if err != nil {
+		return err
+	}
+
+	printAvailable := stable || all
 	if printAvailable {
 		color.New(color.FgCyan, color.Bold).Println("Available Versions:")
 		versions, err := pkg.ListAvailableVersions(all)

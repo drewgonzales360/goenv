@@ -38,7 +38,7 @@ function test-command() {
     fi
 }
 
-test-command "goenv install 1.18" "a13b6fd35d6f1cb0475115074536b618"
+test-command "goenv install 1.18" "deffcd30c86b0eabc82d448b08865891"
 test-command "sudo goenv install 1.18" "1ca020876e6ad587573a0122878d3e9f"
 test-command "sudo goenv use 1.17.8" "47463aa8aaeea547d598684ae198abac"
 test-command "sudo goenv install 1.17.8" "507166d58c5a48cd27e235c0afab5e7f"

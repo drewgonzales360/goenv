@@ -42,6 +42,10 @@ func uninstall(config *Config, versionToDelete string) error {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
+	if err := pkg.CheckInstalled(config.GoenvInstallDirectory, versionToDelete); err != nil {
+		return fmt.Errorf("go version not installed: %w", err)
+	}
+
 	// Remove the old Go version
 	goVersion, err := semver.NewVersion(versionToDelete)
 	if err != nil {

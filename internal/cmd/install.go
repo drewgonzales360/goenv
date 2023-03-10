@@ -48,7 +48,7 @@ func install(config *Config, version string) error {
 
 	filePath, err := pkg.DownloadFile(goVersion)
 	if err != nil {
-		return fmt.Errorf("could not download go: %w", err)
+		return err
 	}
 
 	err = pkg.ExtractTarGz(filePath, path.Join(config.GoenvInstallDirectory, goVersion.Original()))

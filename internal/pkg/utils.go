@@ -17,6 +17,7 @@ package pkg
 
 import (
 	"os"
+	"path"
 	"time"
 )
 
@@ -68,4 +69,10 @@ func removeDeadLink(path string) error {
 	}
 
 	return nil
+}
+
+// CheckInstalled simply checks if a directory exists.
+func CheckInstalled(goenvInstallDirectory string, version string) error {
+	_, err := os.Stat(path.Join(goenvInstallDirectory, version))
+	return err
 }

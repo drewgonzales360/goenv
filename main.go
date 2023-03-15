@@ -73,7 +73,7 @@ func main() {
 		Args:     cobra.ExactArgs(0),
 		PostRunE: cmd.PostRunE,
 	}
-	listCmd.Flags().BoolP("stable", "s", true, "Print out only new stable releases.")
+	listCmd.Flags().BoolP("stable", "s", false, "Print out only new stable releases.")
 	listCmd.Flags().BoolP("all", "a", false, "Print out all releases.")
 
 	configCmd := &cobra.Command{

@@ -52,8 +52,8 @@ func randomString() string {
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
 func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
-	s.Suffix = fmt.Sprintf(" Downloading Go %s", v.Original()) // Build our new spinner
-	s.Start()                                                  // Start the spinner
+	s.Suffix = fmt.Sprintf(" Downloading Go %s\n", v.Original()) // Build our new spinner
+	s.Start()                                                    // Start the spinner
 	defer s.Stop()
 
 	url, checksum := getDownloadInfo(v)

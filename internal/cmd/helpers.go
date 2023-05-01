@@ -16,12 +16,12 @@
 package cmd
 
 import (
-	"context"
 	"fmt"
 	"os"
 	"strings"
 
-	"github.com/urfave/cli/v2"
+	"github.com/Masterminds/semver"
+	"github.com/spf13/cobra"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
@@ -35,40 +35,34 @@ const (
 
 // parseVersionArg ensures that the subcommands that accept a parameter
 // only spcify one parameter.
-func parseVersionArg(c *cli.Context) (string, error) {
-	if c.NArg() != 1 {
-		return "", fmt.Errorf("this command only accepts one parameter")
+func ValidateVersionArg(cmd *cobra.Command, args []string) error {
+	if err := cobra.ExactArgs(1)(cmd, args); err != nil {
+		return err
 	}
-	return c.Args().First(), nil
-}
 
-// parseConfig reads the config from the context, assuming that BeforeActionParseConfig
-// puts the config *in* the context.
-func parseConfig(c *cli.Context) (*pkg.Config, error) {
-	config, ok := c.Context.Value(config).(*pkg.Config)
-	if !ok {
-		return nil, fmt.Errorf("could not create config")
+	if _, err := semver.NewVersion(args[0]); err != nil {
+		return fmt.Errorf("invalid parameter: %w", err)
 	}
-	return config, nil
-}
 
-// BeforeActionParseConfig adds the config to the context so it can be read
-// by parseConfig.
-func BeforeActionParseConfig(c *cli.Context) error {
-	c.Context = context.WithValue(c.Context, config, pkg.ReadConfig())
 	return nil
 }
 
-// AfterAction checks for new versions of Goenv and Go.
-func AfterAction(c *cli.Context) error {
-	pkg.CheckLatestGoenv(c.App.Version)
-	pkg.CheckLatestGo()
-	return nil
+// PostRun checks for new versions of Goenv and Go.
+func PostRun(cmd *cobra.Command, _ []string) {
+	v := semver.MustParse(cmd.Root().Version)
+
+	if err := pkg.CheckLatestGoenv(v); err != nil {
+		pkg.Debug(err.Error())
+	}
+
+	if err := pkg.CheckLatestGo(); err != nil {
+		pkg.Debug(err.Error())
+	}
 }
 
 // warnOnMissingPath does a best effort to let you know that Go can't be called.
 // This will sometimes warn unnecessarily if the user runs as root.
-func warnOnMissingPath(config *pkg.Config) {
+func warnOnMissingPath(config *Config) {
 	bin := config.GoenvRootDirectory + "/bin"
 	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {
 		pkg.Info(fmt.Sprintf("%s is not in your PATH", bin))

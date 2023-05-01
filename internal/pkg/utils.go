@@ -17,21 +17,22 @@ package pkg
 
 import (
 	"os"
+	"path"
 	"time"
 )
 
 // CheckRW checks if the user can install and use Go by making sure
 // they have read and write access to the directories where go will
 // be installed.
-func CheckRW(config *Config) []string {
+func CheckRW(goenvRootDirectory string, goenvInstallDirectory string) []string {
 	accessDenied := []string{}
 	currentTime := time.Now().Local()
 
-	if err := removeDeadLink(config.GoenvRootDirectory); err != nil {
+	if err := removeDeadLink(goenvRootDirectory); err != nil {
 		Debug(err.Error())
 	}
 
-	dirs := []string{config.GoenvRootDirectory, config.GoenvInstallDirectory}
+	dirs := []string{goenvRootDirectory, goenvInstallDirectory}
 	for _, dir := range dirs {
 		if _, err := os.Stat(dir); err == nil {
 			if err := os.Chtimes(dir, currentTime, currentTime); err != nil {
@@ -68,4 +69,10 @@ func removeDeadLink(path string) error {
 	}
 
 	return nil
+}
+
+// CheckInstalled simply checks if a directory exists.
+func CheckInstalled(goenvInstallDirectory string, version string) error {
+	_, err := os.Stat(path.Join(goenvInstallDirectory, version))
+	return err
 }

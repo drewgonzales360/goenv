@@ -17,7 +17,7 @@ USAGE:
    goenv <command> [version]
 
 VERSION:
-   v0.1.2+7a5bcdd
+   v0.2.0+7a5bcdd
 
 AUTHOR:
    Drew Gonzales <github.com/drewgonzales360>
@@ -66,7 +66,7 @@ To install goenv, follow the steps below. Older releases are in the [Releases pa
 
 ```bash
 # Step 1: Download Goenv for your unix based system and add it to /usr/local/bin
-curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/v0.1.2/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.1.2.tar.gz" | sudo tar -xzv -C /usr/local/bin
+curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/v0.2.0/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.2.0.tar.gz" | sudo tar -xzv -C /usr/local/bin
 
 # Step 2: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH
 export PATH=/usr/local/go/bin:PATH

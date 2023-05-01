@@ -23,30 +23,24 @@ import (
 	"strings"
 
 	"github.com/Masterminds/semver"
-	"github.com/urfave/cli/v2"
+	"github.com/spf13/cobra"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
-func UseCommand(c *cli.Context) error {
-	version, err := parseVersionArg(c)
-	if err != nil {
-		return err
-	}
-
-	config, err := parseConfig(c)
-	if err != nil {
-		return err
-	}
+func UseCommand(cmd *cobra.Command, args []string) error {
+	version := args[0]
+	config := ReadConfig()
 
 	if err := use(config, version); err != nil {
 		return err
 	}
+
 	return nil
 }
 
-func use(config *pkg.Config, version string) error {
-	if inaccessible := pkg.CheckRW(config); len(inaccessible) > 0 {
+func use(config *Config, version string) error {
+	if inaccessible := pkg.CheckRW(config.GoenvRootDirectory, config.GoenvInstallDirectory); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
@@ -77,7 +71,7 @@ func use(config *pkg.Config, version string) error {
 	return nil
 }
 
-func link(config *pkg.Config, goVersion *semver.Version) error {
+func link(config *Config, goVersion *semver.Version) error {
 	// Remove the old symlink
 	if _, err := os.Stat(config.GoenvRootDirectory); err == nil {
 		if err = os.Remove(config.GoenvRootDirectory); err != nil {

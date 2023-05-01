@@ -1,6 +1,6 @@
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
 PRERELEASE=
-SEMVER=v0.1.2
+SEMVER=v0.2.0
 VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
 GOOS?=$(shell uname | tr '[:upper:]' '[:lower:]')
 GOARCH?=$(shell uname -m | sed 's/x86_64/amd64/')
@@ -19,8 +19,8 @@ install: build
 
 # Runs a script to test basic, happy-path functionality inside the container
 test:
-	GOOS=linux go build -ldflags="-X 'main.Semver=${VERSION}'"
-	docker build -t goenv-ubuntu .
+	@GOOS=linux go build -ldflags="-X 'main.Semver=${VERSION}'"
+	@docker build -t goenv-ubuntu .
 	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv-ubuntu
 
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions

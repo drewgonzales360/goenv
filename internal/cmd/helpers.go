@@ -47,11 +47,17 @@ func ValidateVersionArg(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-// PostRunE checks for new versions of Goenv and Go.
-func PostRunE(cmd *cobra.Command, _ []string) error {
-	pkg.CheckLatestGoenv(cmd.Root().Version)
-	pkg.CheckLatestGo()
-	return nil
+// PostRun checks for new versions of Goenv and Go.
+func PostRun(cmd *cobra.Command, _ []string) {
+	v := semver.MustParse(cmd.Root().Version)
+
+	if err := pkg.CheckLatestGoenv(v); err != nil {
+		pkg.Debug(err.Error())
+	}
+
+	if err := pkg.CheckLatestGo(); err != nil {
+		pkg.Debug(err.Error())
+	}
 }
 
 // warnOnMissingPath does a best effort to let you know that Go can't be called.

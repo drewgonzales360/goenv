@@ -54,7 +54,7 @@ func (c ReleaseCollection) latest() *github.RepositoryRelease {
 
 // CheckLatestGoenv checks the Github releases for a new version of Goenv. If one is
 // found, the one-line install instructions are printed to the console.
-func CheckLatestGoenv(currentVersion string) {
+func CheckLatestGoenv(currentVersion *semver.Version) error {
 	gh := github.NewClient(nil)
 	repoRelease, _, err := gh.Repositories.ListReleases(context.Background(), "drewgonzales360", "goenv", nil)
 	if err != nil {
@@ -62,45 +62,33 @@ func CheckLatestGoenv(currentVersion string) {
 	}
 
 	if len(repoRelease) < 1 {
-		Debug("found no releases for drewgonzales360/goenv")
-		return
+		return fmt.Errorf("found no releases for drewgonzales360/goenv")
 	}
 
 	releaseCollection := ReleaseCollection(repoRelease)
 	sort.Sort(releaseCollection)
 	latestRelease := releaseCollection.latest()
 
-	ver, err := simpleVer(currentVersion)
+	latest, err := semver.NewVersion(latestRelease.GetTagName())
 	if err != nil {
-		Debug(err.Error())
-		return
+		return err
 	}
 
-	if tag := latestRelease.GetTagName(); ver != tag {
-		color.Green(fmt.Sprintf("\nA new version of goenv has been released. %s ➡️ %s", ver, tag))
-		fmt.Printf(installInstructions, tag, runtime.GOOS, runtime.GOARCH, tag)
-	}
-}
-
-// simpleVer prints the Major.Minor.Patch version so that I can
-// compare it to the release tag name.
-func simpleVer(v string) (string, error) {
-	ver, err := semver.NewVersion(v)
-	if err != nil {
-		return "", err
+	if currentVersion.LessThan(latest) {
+		color.Green(fmt.Sprintf("\nA new version of goenv has been released. %s ➡️ %s", currentVersion, latest))
+		fmt.Printf(installInstructions, latest, runtime.GOOS, runtime.GOARCH, latest)
 	}
 
-	return fmt.Sprintf("v%d.%d.%d", ver.Major(), ver.Minor(), ver.Patch()), nil
+	return nil
 }
 
 // CheckLatestGo looks for new stable versions of Go. If new stable versions
 // have been released since the last check, then we'll let the user know. We
 // only print this message once per new set of releases.
-func CheckLatestGo() {
+func CheckLatestGo() error {
 	releases, err := ListAvailableVersions(false)
 	if err != nil {
-		Debug(err.Error())
-		return
+		return err
 	}
 
 	newReleaseData := []byte(fmt.Sprintf("%+v\n", releases))
@@ -127,4 +115,6 @@ func CheckLatestGo() {
 		gvl := CreateGoVersionList(releases)
 		Print(gvl, "  ")
 	}
+
+	return nil
 }

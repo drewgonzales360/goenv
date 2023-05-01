@@ -36,53 +36,53 @@ func main() {
 	viper.SetDefault(cmd.GoEnvInstallDirEnvVar, cmd.DefaultGoInstallDirectory)
 
 	installCmd := &cobra.Command{
-		Use:      "install",
-		Short:    "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
-		Example:  fmt.Sprintf("ex: %s install 1.19.1", appName),
-		Aliases:  []string{"i"},
-		RunE:     cmd.InstallCommand,
-		Args:     cmd.ValidateVersionArg,
-		PostRunE: cmd.PostRunE,
+		Use:     "install",
+		Short:   "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
+		Example: fmt.Sprintf("ex: %s install 1.19.1", appName),
+		Aliases: []string{"i"},
+		RunE:    cmd.InstallCommand,
+		Args:    cmd.ValidateVersionArg,
+		PostRun: cmd.PostRun,
 	}
 
 	uninstallCmd := &cobra.Command{
-		Use:      "uninstall",
-		Short:    "Uninstall a Go version.",
-		Example:  fmt.Sprintf("ex: %s uninstall 1.17", appName),
-		Aliases:  []string{"rm"},
-		RunE:     cmd.UninstallCommand,
-		Args:     cmd.ValidateVersionArg,
-		PostRunE: cmd.PostRunE,
+		Use:     "uninstall",
+		Short:   "Uninstall a Go version.",
+		Example: fmt.Sprintf("ex: %s uninstall 1.17", appName),
+		Aliases: []string{"rm"},
+		RunE:    cmd.UninstallCommand,
+		Args:    cmd.ValidateVersionArg,
+		PostRun: cmd.PostRun,
 	}
 
 	useCmd := &cobra.Command{
-		Use:      "use",
-		Short:    "Switch the current Go version to use whichever version in specified and installed.",
-		Example:  fmt.Sprintf("ex: %s use 1.18", appName),
-		Aliases:  []string{"u"},
-		RunE:     cmd.UseCommand,
-		Args:     cmd.ValidateVersionArg,
-		PostRunE: cmd.PostRunE,
+		Use:     "use",
+		Short:   "Switch the current Go version to use whichever version in specified and installed.",
+		Example: fmt.Sprintf("ex: %s use 1.18", appName),
+		Aliases: []string{"u"},
+		RunE:    cmd.UseCommand,
+		Args:    cmd.ValidateVersionArg,
+		PostRun: cmd.PostRun,
 	}
 
 	listCmd := &cobra.Command{
-		Use:      "list",
-		Short:    "List all installed available Go versions.",
-		Aliases:  []string{"ls", "l"},
-		RunE:     cmd.ListCommand,
-		Args:     cobra.ExactArgs(0),
-		PostRunE: cmd.PostRunE,
+		Use:     "list",
+		Short:   "List all installed available Go versions.",
+		Aliases: []string{"ls", "l"},
+		RunE:    cmd.ListCommand,
+		Args:    cobra.ExactArgs(0),
+		PostRun: cmd.PostRun,
 	}
 	listCmd.Flags().BoolP("stable", "s", false, "Print out only new stable releases.")
 	listCmd.Flags().BoolP("all", "a", false, "Print out all releases.")
 
 	configCmd := &cobra.Command{
-		Use:      "config",
-		Short:    "Print out the current config",
-		Aliases:  []string{"c"},
-		RunE:     cmd.ConfigCommand,
-		Args:     cobra.ExactArgs(0),
-		PostRunE: cmd.PostRunE,
+		Use:     "config",
+		Short:   "Print out the current config",
+		Aliases: []string{"c"},
+		RunE:    cmd.ConfigCommand,
+		Args:    cobra.ExactArgs(0),
+		PostRun: cmd.PostRun,
 	}
 
 	rootCmd := &cobra.Command{Version: Semver}

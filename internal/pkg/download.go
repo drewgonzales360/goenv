@@ -33,7 +33,7 @@ import (
 )
 
 const (
-	charset = "abcdefghijklmnopqrstuvwxyz" + "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
 	tempDir = "/tmp/goenv"
 )
 
@@ -52,7 +52,7 @@ func randomString() string {
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
 func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
-	s.Suffix = fmt.Sprintf(" Downloading Go %s\n", v.Original()) // Build our new spinner
+	s.Suffix = fmt.Sprintf(" Downloading Go %s\n", v) // Build our new spinner
 	s.Start()                                                    // Start the spinner
 	defer s.Stop()
 
@@ -73,7 +73,7 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
-	filepath = fmt.Sprintf("%s/%s.tar.gz", tempDir, randomString())
+	filepath = fmt.Sprintf("%s/%s-%s.tar.gz", tempDir, v, randomString())
 	out, err := os.Create(filepath)
 	if err != nil {
 		return "", err
@@ -91,9 +91,9 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 		return "", err
 	}
 
-	s.FinalMSG = fmt.Sprintf("✅ Downloaded and validated Go %s\n", v.Original())
+	s.FinalMSG = fmt.Sprintf("✅ Downloaded and validated Go %s\n", v)
 	if !validSha {
-		s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v.Original())
+		s.FinalMSG = fmt.Sprintf("✅ Downloaded Go %s\n", v)
 	}
 
 	return filepath, nil

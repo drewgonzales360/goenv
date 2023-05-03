@@ -79,10 +79,11 @@ func link(config *Config, goVersion *semver.Version) error {
 		}
 	}
 
-	goInstallation := path.Join(config.GoenvInstallDirectory, goVersion.Original())
+	gvs := goVersion.String()
+	goInstallation := path.Join(config.GoenvInstallDirectory, gvs)
 	if _, err := os.Stat(goInstallation); err != nil {
 		pkg.Debug(err.Error())
-		return fmt.Errorf("could not find go version %s. goenv install %s", goVersion.Original(), goVersion.Original())
+		return fmt.Errorf("could not find go version %s. goenv install %s", gvs, gvs)
 	}
 
 	if err := os.Symlink(goInstallation, config.GoenvRootDirectory); err != nil {

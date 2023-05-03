@@ -46,12 +46,12 @@ func install(config *Config, version string) error {
 		return fmt.Errorf("could not parse %s: %w", version, err)
 	}
 
-	filePath, err := pkg.DownloadFile(goVersion)
+	tarballPath, err := pkg.DownloadFile(goVersion)
 	if err != nil {
 		return err
 	}
 
-	err = pkg.ExtractTarGz(filePath, path.Join(config.GoenvInstallDirectory, goVersion.Original()))
+	err = pkg.ExtractTarGz(tarballPath, path.Join(config.GoenvInstallDirectory, goVersion.String()))
 	if err != nil {
 		return fmt.Errorf("could not extract go: %w", err)
 	}

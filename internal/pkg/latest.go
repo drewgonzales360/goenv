@@ -52,13 +52,13 @@ func (c ReleaseCollection) latest() *github.RepositoryRelease {
 	return c[len(c)-1]
 }
 
-// CheckLatestGoenv checks the Github releases for a new version of Goenv. If one is
-// found, the one-line install instructions are printed to the console.
+// CheckLatestGoenv checks the Github releases for a new version of Goenv. If one is found, the
+// one-line install instructions are printed to the console.
 func CheckLatestGoenv(currentVersion *semver.Version) error {
 	gh := github.NewClient(nil)
 	repoRelease, _, err := gh.Repositories.ListReleases(context.Background(), "drewgonzales360", "goenv", nil)
 	if err != nil {
-		Debug(err.Error())
+		return err
 	}
 
 	if len(repoRelease) < 1 {
@@ -82,9 +82,9 @@ func CheckLatestGoenv(currentVersion *semver.Version) error {
 	return nil
 }
 
-// CheckLatestGo looks for new stable versions of Go. If new stable versions
-// have been released since the last check, then we'll let the user know. We
-// only print this message once per new set of releases.
+// CheckLatestGo looks for new stable versions of Go. If new stable versions have been released
+// since the last check, then we'll let the user know. We only print this message once per new set
+// of releases.
 func CheckLatestGo() error {
 	releases, err := ListAvailableVersions(false)
 	if err != nil {
@@ -101,7 +101,6 @@ func CheckLatestGo() error {
 
 	oldReleaseData, err := os.ReadFile(releaseDataPath)
 	if err != nil {
-		// If we can't read the old data, don't warn
 		oldReleaseData = newReleaseData
 		Debug(err.Error())
 	}
@@ -110,6 +109,7 @@ func CheckLatestGo() error {
 	if len(releases) > 1 {
 		newMsg = "New versions of Go are available:"
 	}
+
 	if !bytes.Equal(oldReleaseData, newReleaseData) {
 		color.Green(newMsg)
 		gvl := CreateGoVersionList(releases)

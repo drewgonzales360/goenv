@@ -33,8 +33,7 @@ const (
 	config    GoEnvContextKey = "config"
 )
 
-// parseVersionArg ensures that the subcommands that accept a parameter
-// only spcify one parameter.
+// parseVersionArg ensures that the subcommands that accept a parameter only spcify one parameter.
 func ValidateVersionArg(cmd *cobra.Command, args []string) error {
 	if err := cobra.ExactArgs(1)(cmd, args); err != nil {
 		return err
@@ -61,7 +60,6 @@ func PostRun(cmd *cobra.Command, _ []string) {
 }
 
 // warnOnMissingPath does a best effort to let you know that Go can't be called.
-// This will sometimes warn unnecessarily if the user runs as root.
 func warnOnMissingPath(config *Config) {
 	bin := config.GoenvRootDirectory + "/bin"
 	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {

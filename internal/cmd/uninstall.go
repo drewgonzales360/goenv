@@ -37,26 +37,25 @@ func UninstallCommand(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func uninstall(config *Config, versionToDelete string) error {
+func uninstall(config *Config, version string) error {
 	if inaccessible := pkg.CheckRW(config.GoenvRootDirectory, config.GoenvInstallDirectory); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
-	if err := pkg.CheckInstalled(config.GoenvInstallDirectory, versionToDelete); err != nil {
+	goVersion, err := semver.NewVersion(version)
+	if err != nil {
+		return fmt.Errorf("could not parse %s: %w", version, err)
+	}
+
+	if err := pkg.CheckInstalled(config.GoenvInstallDirectory, goVersion.String()); err != nil {
 		return fmt.Errorf("go version not installed: %w", err)
 	}
 
-	// Remove the old Go version
-	goVersion, err := semver.NewVersion(versionToDelete)
-	if err != nil {
-		return fmt.Errorf("could not parse %s: %w", versionToDelete, err)
-	}
-
-	if err = os.RemoveAll(path.Join(config.GoenvInstallDirectory, goVersion.Original())); err != nil {
+	if err = os.RemoveAll(path.Join(config.GoenvInstallDirectory, goVersion.String())); err != nil {
 		return fmt.Errorf("could not uninstall go: %w", err)
 	}
 
-	pkg.Success("Uninstalled Go " + goVersion.Original())
+	pkg.Success("Uninstalled Go " + goVersion.String())
 
 	// Use another version
 	versions, err := os.ReadDir(config.GoenvInstallDirectory)
@@ -64,13 +63,13 @@ func uninstall(config *Config, versionToDelete string) error {
 		return err
 	}
 	if len(versions) == 0 {
-		pkg.Warn("no other installed go versions")
+		pkg.Warn("No other Go versions installed")
 		return nil
 	}
 
-	defaultVersion := versions[len(versions)-1].Name()
-	if err := use(config, defaultVersion); err == nil {
-		pkg.Debug(fmt.Sprintf("could not default to %s: %s", defaultVersion, err))
+	latestVersion := versions[len(versions)-1].Name()
+	if err := use(config, latestVersion); err != nil {
+		return fmt.Errorf("could not default to %s: %s", latestVersion, err)
 	}
 
 	return nil

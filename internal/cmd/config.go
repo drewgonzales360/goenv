@@ -24,13 +24,6 @@ import (
 	"github.com/spf13/viper"
 )
 
-func ConfigCommand(cmd *cobra.Command, _ []string) error {
-	config := ReadConfig()
-	fmt.Print(config)
-	warnOnMissingPath(config)
-	return nil
-}
-
 type Config struct {
 	// The file placed at GoenvRootDirectory is a symlink to the GoenvInstallDirectory
 	GoenvRootDirectory string
@@ -51,8 +44,14 @@ const (
 	configSetByEnv     = "\t(set by environment variable)\n"
 )
 
-// ReadConfig reads the environment variables for a user and creates
-// a config. If we need any additional config, it'll be parsed in here.
+func ConfigCommand(cmd *cobra.Command, _ []string)  {
+	config := ReadConfig()
+	fmt.Print(config)
+	warnOnMissingPath(config)
+}
+
+// ReadConfig reads the environment variables for a user and creates a config. If we need any
+// additional config, it'll be parsed in here.
 func ReadConfig() *Config {
 	return &Config{
 		GoenvRootDirectory:    viper.GetString(GoEnvRootDirEnvVar),
@@ -60,8 +59,8 @@ func ReadConfig() *Config {
 	}
 }
 
-// String prints the config to a tabwriter so that the columns are aligned when it's
-// fmt.Print'ed to the terminal.
+// String prints the config to a tabwriter so that the columns are aligned when it's fmt.Print'ed to
+// the terminal.
 func (c *Config) String() string {
 	buf := bytes.Buffer{}
 	w := tabwriter.NewWriter(&buf, 0, 0, 1, ' ', 0)

@@ -46,8 +46,8 @@ func CreateGoVersionList(directories []string) map[string][]string {
 	return goVersionList
 }
 
-// Print will nicely display the installed and available versions of
-// Go you can install to the terminal.
+// Print will nicely display the installed and available versions of Go you can install to the
+// terminal.
 func Print(g map[string][]string, linePrefix string) {
 	keys := make([]string, 0, len(g))
 	for k := range g {
@@ -64,8 +64,7 @@ func Print(g map[string][]string, linePrefix string) {
 	}
 }
 
-// sortSemvers maps the raw strings into semver.Versions
-// then sorts it.
+// sortSemvers maps the raw strings into semver.Versions then sorts it.
 func sortSemvers(raw []string) []*semver.Version {
 	vs := make([]*semver.Version, len(raw))
 	for i, r := range raw {

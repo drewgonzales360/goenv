@@ -21,9 +21,8 @@ import (
 	"time"
 )
 
-// CheckRW checks if the user can install and use Go by making sure
-// they have read and write access to the directories where go will
-// be installed.
+// CheckRW checks if the user can install and use Go by making sure they have read and write access
+// to the directories where go will be installed.
 func CheckRW(goenvRootDirectory string, goenvInstallDirectory string) []string {
 	accessDenied := []string{}
 	currentTime := time.Now().Local()
@@ -50,8 +49,8 @@ func CheckRW(goenvRootDirectory string, goenvInstallDirectory string) []string {
 	return accessDenied
 }
 
-// removeDeadLink checks if the go root is pointed at an uninstalled
-// go version. If that's the case, then we remove the link.
+// removeDeadLink checks if the go root is pointed at an uninstalled go version. If that's the case,
+// then we remove the link.
 func removeDeadLink(path string) error {
 	installDir, err := os.Readlink(path)
 	if err != nil {

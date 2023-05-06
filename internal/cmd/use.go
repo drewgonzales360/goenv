@@ -53,17 +53,18 @@ func use(config *Config, version string) error {
 		return err
 	}
 
-	isRoot := isRoot()
 	goCmd := "go"
-	if !isRoot {
-		warnOnMissingPath(config)
-	} else {
+	if isRoot() {
+		// The root user has no idea what the is in the path of the normal user, so we call the
+		// binary directly.
 		goCmd = path.Join(config.GoenvRootDirectory, "bin", goCmd)
+	} else {
+		// If the non-root user is calling, then we should check if it's in their path and warn if
+		// it isn't.
+		warnOnMissingPath(config)
 	}
-
 	output, err := exec.Command(goCmd, "version").Output()
 	if err != nil {
-		pkg.Debug(err.Error())
 		return err
 	}
 
@@ -92,7 +93,6 @@ func link(config *Config, goVersion *semver.Version) error {
 
 	return nil
 }
-
 func isRoot() bool {
 	return os.Geteuid() == 0
 }

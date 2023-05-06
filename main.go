@@ -17,6 +17,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/spf13/cobra"
 	"github.com/spf13/viper"
@@ -80,7 +81,7 @@ func main() {
 		Use:     "config",
 		Short:   "Print out the current config",
 		Aliases: []string{"c"},
-		RunE:    cmd.ConfigCommand,
+		Run:     cmd.ConfigCommand,
 		Args:    cobra.ExactArgs(0),
 		PostRun: cmd.PostRun,
 	}
@@ -88,5 +89,8 @@ func main() {
 	rootCmd := &cobra.Command{Version: Semver}
 	rootCmd.AddCommand(installCmd, uninstallCmd, useCmd, listCmd, configCmd)
 
-	rootCmd.Execute()
+	err := rootCmd.Execute()
+	if err != nil {
+		os.Exit(1)
+	}
 }

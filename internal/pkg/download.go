@@ -47,8 +47,8 @@ func randomString() string {
 	return string(b)
 }
 
-// DownloadFile will download a url to a local file. If we have a recorded shasum for the
-// file, we'll check it. We'll return a path to the downloaded file.
+// DownloadFile will download a url to a local file. If we have a recorded shasum for the file,
+// we'll check it. We'll return a path to the downloaded file.
 // https://go.dev/dl/go1.18.linux-amd64.tar.gz
 func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
@@ -99,11 +99,10 @@ func DownloadFile(v *semver.Version) (filepath string, err error) {
 	return filepath, nil
 }
 
-// checkHash will check if the hash of the file matches the hash advertised on
-// go.dev/dl. If we have the hash written down in our code, we'll check it against
-// what we downloaded. If we haven't put the hash in, this won't throw an error.
-// This way, we don't _have_ to update every time a new version comes out. We
-// just won't check the hash.
+// checkHash will check if the hash of the file matches the hash advertised on go.dev/dl. If we have
+// the hash written down in our code, we'll check it against what we downloaded. If we haven't put
+// the hash in, this won't throw an error. This way, we don't _have_ to update every time a new
+// version comes out. We just won't check the hash.
 func checkHash(file string, expected ChecksumSHA256) (bool, error) {
 	if expected == "" {
 		return true, nil
@@ -122,8 +121,8 @@ func checkHash(file string, expected ChecksumSHA256) (bool, error) {
 	return true, nil
 }
 
-// ExtractTarGz will do the equivalent of a tar -xzvf -C and untar the
-// tarball to whichever destination path we need to go to.
+// ExtractTarGz will do the equivalent of a tar -xzvf -C and untar the tarball to whichever
+// destination path we need to go to.
 func ExtractTarGz(tarballPath, destinationPath string) error {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
 	s.Suffix = " Extracting package" // Build our new spinner

@@ -53,9 +53,8 @@ type File struct {
 	Uploaded       time.Time `json:"-"`
 }
 
-// getGoVersions queries the go.dev/dl for the current releases. The latest patch
-// versions of the latest two minor versions are considered stable. If you want
-// all releases of Go, pass in true.
+// getGoVersions queries the go.dev/dl for the current releases. The latest patch versions of the
+// latest two minor versions are considered stable. If you want all releases of Go, pass in true.
 func getGoVersions(getAllVersions bool) ([]Release, error) {
 	goDevURL := "https://go.dev/dl/?mode=json"
 	if getAllVersions {
@@ -87,9 +86,8 @@ func getGoVersions(getAllVersions bool) ([]Release, error) {
 	return releases, nil
 }
 
-// getDownloadInfo will make a best effort to query go.dev for the latest releases
-// and their shasums. If we can't reach it, default to the well known formats
-// and locations of the tarballs.
+// getDownloadInfo will make a best effort to query go.dev for the latest releases and their
+// shasums. If we can't reach it, default to the well known formats and locations of the tarballs.
 func getDownloadInfo(v *semver.Version) (url string, checkSum ChecksumSHA256) {
 	releases, err := getGoVersions(true)
 	if err != nil {
@@ -114,8 +112,7 @@ func getDownloadInfo(v *semver.Version) (url string, checkSum ChecksumSHA256) {
 	return defaultDownloadURL(v), ""
 }
 
-// defaultDownloadURL assumes the format and URL of the tarball we
-// need to install Go.
+// defaultDownloadURL assumes the format and URL of the tarball we need to install Go.
 func defaultDownloadURL(v *semver.Version) string {
 	urlVersion := toLooseGoVersion(v)
 
@@ -133,8 +130,8 @@ func defaultDownloadURL(v *semver.Version) string {
 	return url
 }
 
-// toLooseGoVersion will take a strict semver and turn it into the looser Go convention of
-// stripping the minor patch when it's .0.
+// toLooseGoVersion will take a strict semver and turn it into the looser Go convention of stripping
+// the minor patch when it's .0.
 func toLooseGoVersion(v *semver.Version) string {
 	urlVersion := v.String()
 	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
@@ -146,10 +143,9 @@ func toLooseGoVersion(v *semver.Version) string {
 	return urlVersion
 }
 
-// ListAvailableVersions reads all available versions of Go that can
-// be installed. It queries go.dev for what's available. By default,
-// it'll return only the latest patches of the two most recent minor
-// versions. For example:
+// ListAvailableVersions reads all available versions of Go that can be installed. It queries go.dev
+// for what's available. By default, it'll return only the latest patches of the two most recent
+// minor versions. For example:
 // 1.18: 1.18.7
 // 1.19: 1.19.2
 func ListAvailableVersions(getAllVersions bool) ([]string, error) {

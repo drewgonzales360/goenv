@@ -18,6 +18,7 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"runtime"
 	"strings"
 
 	"github.com/Masterminds/semver"
@@ -31,6 +32,10 @@ type GoEnvContextKey string
 const (
 	PermError string          = "you do not have access to %v"
 	config    GoEnvContextKey = "config"
+
+	// goVersionDarwinARMIntroduced is the version that the community started releasing binaries for
+	// Apple Silicon
+	goVersionDarwinARMIntroduced = "1.16"
 )
 
 // parseVersionArg ensures that the subcommands that accept a parameter only spcify one parameter.
@@ -39,8 +44,13 @@ func ValidateVersionArg(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
-	if _, err := semver.NewVersion(args[0]); err != nil {
+	version, err := semver.NewVersion(args[0])
+	if err != nil {
 		return fmt.Errorf("invalid parameter: %w", err)
+	}
+
+	if !availableOnAppleSilicon(version) {
+		return fmt.Errorf("go%s was not yet available for apple silicon", version)
 	}
 
 	return nil
@@ -66,4 +76,10 @@ func warnOnMissingPath(config *Config) {
 		pkg.Info(fmt.Sprintf("%s is not in your PATH", bin))
 		pkg.Info(fmt.Sprintf("export PATH=%s:$PATH", bin))
 	}
+}
+
+func availableOnAppleSilicon(version *semver.Version) bool {
+	return !(version.LessThan(semver.MustParse(goVersionDarwinARMIntroduced)) &&
+		runtime.GOOS == "darwin" &&
+		runtime.GOARCH == "arm64")
 }

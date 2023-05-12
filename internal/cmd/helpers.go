@@ -49,8 +49,8 @@ func ValidateVersionArg(cmd *cobra.Command, args []string) error {
 		return fmt.Errorf("invalid parameter: %w", err)
 	}
 
-	if !availableOnAppleSilicon(version) {
-		return fmt.Errorf("go%s was not yet available for apple silicon", version)
+	if !darwinArm(version) {
+		return fmt.Errorf("go%s was not yet available for %s-%s", version, runtime.GOARCH, runtime.GOARCH)
 	}
 
 	return nil
@@ -78,7 +78,7 @@ func warnOnMissingPath(config *Config) {
 	}
 }
 
-func availableOnAppleSilicon(version *semver.Version) bool {
+func darwinArm(version *semver.Version) bool {
 	return !(version.LessThan(semver.MustParse(goVersionDarwinARMIntroduced)) &&
 		runtime.GOOS == "darwin" &&
 		runtime.GOARCH == "arm64")

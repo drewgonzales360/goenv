@@ -104,7 +104,7 @@ If your VScode editor throws you weird errors on start up, add this to your vsco
   - Checks for available versions of Go. This avoids code changes to `goenv` every time a new version is released.
   - Downloads the tarball for the corresponding version a user provides. Makes a best effort attempt to check the shasums
   - Extracts the tarball to `/usr/local/goenv/${VERSION}`. For example, `goenv install 1.17.6` will create `/usr/local/goenv/1.17.6`
-  - Creates a symlink from `/usr/local/go/` to `/usr/local/goenv/1.17.6/`. The same thing happens for `gofmt`.
+  - Creates a symlink from `/usr/local/go/` to `/usr/local/goenv/1.17.6/`.
 
 The install directory `/usr/local/goenv` and root directory `/usr/local/go` is configurable through environment variables.
 

@@ -16,22 +16,34 @@
 package pkg_test
 
 import (
+	"path"
 	"testing"
 
 	"github.com/Masterminds/semver"
+	"github.com/stretchr/testify/assert"
 
 	"github.com/drewgonzales360/goenv/internal/pkg"
 )
 
+const testDir = "/tmp/goenv/"
+
 func TestDownloadAndUntar(t *testing.T) {
-	version := "1.18"
-	goVersion := semver.MustParse(version)
-	tarballPath, err := pkg.DownloadFile(goVersion)
-	if err != nil {
-		t.Fatal(err)
+
+	testCases := []string{
+		"1.18",
+		"1.20.5",
+		"1.21",
 	}
 
-	if err = pkg.ExtractTarGz(tarballPath, "/tmp/goenv/"+version); err != nil {
-		t.Fatal(err)
+	for _, version := range testCases {
+		goVersion := semver.MustParse(version)
+		tarballPath, err := pkg.DownloadFile(goVersion)
+		assert.NoError(t, err)
+
+		installDir := path.Join(testDir, goVersion.String())
+		err = pkg.ExtractTarGz(tarballPath, installDir)
+		assert.NoError(t, err)
+
+		assert.DirExists(t, installDir)
 	}
 }

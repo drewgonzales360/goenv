@@ -135,8 +135,9 @@ func defaultDownloadURL(v *semver.Version) string {
 func toLooseGoVersion(v *semver.Version) string {
 	urlVersion := v.String()
 	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
-	// actually inclued the last .0
-	if v.Patch() == 0 {
+	// actually inclued the last .0. Starting in Go 1.21, we leave the .0 at the
+	// end.
+	if v.Patch() == 0 && v.LessThan(semver.MustParse("1.21.0")){
 		urlVersion = strings.TrimSuffix(urlVersion, ".0")
 	}
 

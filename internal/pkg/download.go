@@ -25,6 +25,7 @@ import (
 	"math/rand"
 	"net/http"
 	"os"
+	"path"
 	"strings"
 	"time"
 
@@ -53,7 +54,7 @@ func randomString() string {
 func DownloadFile(v *semver.Version) (filepath string, err error) {
 	s := spinner.New(spinner.CharSets[38], 200*time.Millisecond)
 	s.Suffix = fmt.Sprintf(" Downloading Go %s\n", v) // Build our new spinner
-	s.Start()                                                    // Start the spinner
+	s.Start()                                         // Start the spinner
 	defer s.Stop()
 
 	url, checksum := getDownloadInfo(v)
@@ -129,6 +130,10 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 	s.Start()                        // Start the spinner
 	defer s.Stop()
 
+	if err := os.MkdirAll(destinationPath, 0755); err != nil {
+		return fmt.Errorf("could not create %s: %w", destinationPath, err)
+	}
+
 	r, err := os.Open(tarballPath)
 	if err != nil {
 		return fmt.Errorf("could not open tarball: %w", err)
@@ -158,7 +163,7 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 				return fmt.Errorf("could not create directory: %w", err)
 			}
 		case tar.TypeReg:
-			outFile, err := os.Create(extractionDestination)
+			outFile, err := createFile(extractionDestination)
 			if err != nil {
 				return fmt.Errorf("could not create file: %w", err)
 			}
@@ -183,4 +188,28 @@ func ExtractTarGz(tarballPath, destinationPath string) error {
 
 	s.FinalMSG = "✅ Extracted package\n"
 	return nil
+}
+
+// createFile will create all the parent directories for a file path, assuming that the last
+// element in the filepath is a file. In Go 1.21, the tarballs no longer have directory elements, so
+// extracting the files in 1.21 would fail because intermediary directories were not being created.
+func createFile(filepath string) (*os.File, error) {
+	dir := path.Dir(filepath)
+	_, err := os.Stat(dir)
+	if err != nil {
+		if os.IsNotExist(err) {
+			if err := os.MkdirAll(dir, 0755); err != nil {
+				return nil, fmt.Errorf("could not create directory: %w", err)
+			}
+		} else {
+			return nil, fmt.Errorf("could not find %s: %w", dir, err)
+		}
+	}
+
+	outFile, err := os.Create(filepath)
+	if err != nil {
+		return nil, err
+	}
+
+	return outFile, err
 }

@@ -1,7 +1,6 @@
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
-PRERELEASE=
-SEMVER=v0.2.0
-VERSION=${SEMVER}${PRERELEASE}${BUILD_METADATA}
+SEMVER=v0.3.0
+VERSION=${SEMVER}${BUILD_METADATA}
 GOOS?=$(shell uname | tr '[:upper:]' '[:lower:]')
 GOARCH?=$(shell uname -m | sed 's/x86_64/amd64/')
 
@@ -14,8 +13,8 @@ build:
 tar: build
 	@tar -czf tmp/goenv-${GOOS}-${GOARCH}-${SEMVER}.tar.gz ./goenv
 
-install: build
-	mv goenv /usr/local/bin
+install:
+	@go install -ldflags="-X 'main.Semver=${SEMVER}-unreleased${BUILD_METADATA}'"
 
 # Runs a script to test basic, happy-path functionality inside the container
 test:
@@ -37,7 +36,8 @@ release:
 	@GOOS=darwin GOARCH=amd64 make tar
 	@GOOS=darwin GOARCH=arm64 make tar
 	@git tag ${SEMVER}
-	gh release create --notes "Release ${VERSION}" --target main ${SEMVER} tmp/goenv-*-*-${SEMVER}.tar.gz
+	@git push --tags
+	gh release create --notes "Release ${VERSION}" ${SEMVER} tmp/goenv-*-*-${SEMVER}.tar.gz
 readme:
 	@sed "s/XXLatestXX/${SEMVER}/g" < templates/README.md > README.md
 

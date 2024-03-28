@@ -1,5 +1,5 @@
 // ///////////////////////////////////////////////////////////////////////
-// Copyright 2023 Drew Gonzales
+// Copyright 2024 Drew Gonzales
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/Masterminds/semver"
+	"github.com/Masterminds/semver/v3"
 	"github.com/briandowns/spinner"
 )
 

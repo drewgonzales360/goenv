@@ -38,6 +38,8 @@ release:
 	@git tag ${SEMVER}
 	@git push --tags
 	gh release create --notes "Release ${VERSION}" ${SEMVER} tmp/goenv-*-*-${SEMVER}.tar.gz
+
+# Regenerates the readme with install instructions for the latest version.
 readme:
 	@sed "s/XXLatestXX/${SEMVER}/g" < templates/README.md > README.md
 

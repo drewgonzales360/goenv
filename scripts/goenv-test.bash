@@ -50,3 +50,4 @@ test-command "sudo goenv rm 1.18"               "48bacb95c998567dcb71c4c8d80f058
 test-command "sudo goenv rm 1.18.1"             "7eee8bee6ab2b5c84adead67b7ed0565"
 test-command "sudo goenv rm 1.17.8"             "f6d8e601d35578a4567982d8741afd08"
 test-command "sudo goenv rm 1.19.1"             "deb74a9475d1bd1e9fa234f78afe4f49"
+test-command "sudo goenv install 1.20"          "47ca9a018b21c73b6f001d06823899bd"

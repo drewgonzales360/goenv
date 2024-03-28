@@ -1,5 +1,5 @@
 // ///////////////////////////////////////////////////////////////////////
-// Copyright 2023 Drew Gonzales
+// Copyright 2024 Drew Gonzales
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -17,17 +17,14 @@ package pkg
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestDiscover(t *testing.T) {
 	releases, err := getGoVersions(false)
-	if err != nil {
-		t.Log(err)
-		t.Fail()
-	}
+	assert.NoError(t, err)
 
-	if len(releases) == 0 {
-		t.Fail()
-	}
-	t.Logf("%+v", releases)
+	// If you request for the latest two minor versions, you should get two stable releases.
+	assert.Len(t, releases, 2)
 }

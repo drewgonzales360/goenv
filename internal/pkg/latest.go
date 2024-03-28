@@ -21,7 +21,6 @@ import (
 	"fmt"
 	"os"
 	"runtime"
-	"sort"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/fatih/color"
@@ -29,45 +28,18 @@ import (
 )
 
 const (
-	installInstructions = "  curl -sSL 'https://github.com/drewgonzales360/goenv/releases/download/%s/goenv-%s-%s-%s.tar.gz' | sudo tar -xzv -C /usr/local/bin\n"
+	installInstructions = "  curl -sSL 'https://github.com/drewgonzales360/goenv/releases/download/v%s/goenv-%s-%s-v%s.tar.gz' | sudo tar -xzv -C /usr/local/bin\n"
 	releaseDataPath     = "/var/tmp/goenv-latest.txt"
 )
 
-// ReleaseCollection implements the necessary interface to sort. Len, Less, and Swap
-type ReleaseCollection []*github.RepositoryRelease
-
-func (c ReleaseCollection) Len() int {
-	return len(c)
-}
-
-func (c ReleaseCollection) Less(i, j int) bool {
-	return c[i].PublishedAt.Before(c[j].PublishedAt.Time)
-}
-
-func (c ReleaseCollection) Swap(i, j int) {
-	c[i], c[j] = c[j], c[i]
-}
-
-func (c ReleaseCollection) latest() *github.RepositoryRelease {
-	return c[len(c)-1]
-}
-
 // CheckLatestGoenv checks the Github releases for a new version of Goenv. If one is found, the
 // one-line install instructions are printed to the console.
-func CheckLatestGoenv(currentVersion *semver.Version) error {
+func CheckLatestGoenv(ctx context.Context, currentVersion *semver.Version) error {
 	gh := github.NewClient(nil)
-	repoRelease, _, err := gh.Repositories.ListReleases(context.Background(), "drewgonzales360", "goenv", nil)
+	latestRelease, _, err := gh.Repositories.GetLatestRelease(ctx, "drewgonzales360", "goenv")
 	if err != nil {
 		return err
 	}
-
-	if len(repoRelease) < 1 {
-		return fmt.Errorf("found no releases for drewgonzales360/goenv")
-	}
-
-	releaseCollection := ReleaseCollection(repoRelease)
-	sort.Sort(releaseCollection)
-	latestRelease := releaseCollection.latest()
 
 	latest, err := semver.NewVersion(latestRelease.GetTagName())
 	if err != nil {
@@ -105,13 +77,8 @@ func CheckLatestGo() error {
 		Debug(err.Error())
 	}
 
-	newMsg := "A new version of Go is available:"
-	if len(releases) > 1 {
-		newMsg = "New versions of Go are available:"
-	}
-
 	if !bytes.Equal(oldReleaseData, newReleaseData) {
-		color.Green(newMsg)
+		color.Green("New versions of Go are available:")
 		gvl := CreateGoVersionList(releases)
 		Print(gvl, "  ")
 	}

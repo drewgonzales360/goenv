@@ -60,7 +60,7 @@ func ValidateVersionArg(cmd *cobra.Command, args []string) error {
 func PostRun(cmd *cobra.Command, _ []string) {
 	v := semver.MustParse(cmd.Root().Version)
 
-	if err := pkg.CheckLatestGoenv(v); err != nil {
+	if err := pkg.CheckLatestGoenv(cmd.Context(), v); err != nil {
 		pkg.Debug(err.Error())
 	}
 

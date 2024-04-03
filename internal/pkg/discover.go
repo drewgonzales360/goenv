@@ -1,3 +1,5 @@
+package pkg
+
 // ///////////////////////////////////////////////////////////////////////
 // Copyright 2024 Drew Gonzales
 //
@@ -13,8 +15,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // ///////////////////////////////////////////////////////////////////////
-package pkg
-
 import (
 	"encoding/json"
 	"fmt"
@@ -137,7 +137,7 @@ func toLooseGoVersion(v *semver.Version) string {
 	// If we have 1.18, we'd parse the version to 1.18.0, but the URL doesn't
 	// actually inclued the last .0. Starting in Go 1.21, we leave the .0 at the
 	// end.
-	if v.Patch() == 0 && v.LessThan(semver.MustParse("1.21.0")){
+	if v.Patch() == 0 && v.LessThan(semver.MustParse("1.21.0")) {
 		urlVersion = strings.TrimSuffix(urlVersion, ".0")
 	}
 

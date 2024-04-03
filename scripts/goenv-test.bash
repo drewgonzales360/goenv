@@ -38,12 +38,12 @@ function test-command() {
     fi
 }
 
-test-command "goenv install 1.18"               "1b3aab6f0142d34d991ce0cc8ec3e591"
+test-command "goenv install 1.18"               "5189677c7fdba8d0e1f26ae57898566a"
 test-command "sudo goenv install 1.18"          "d38b90a90390b3756e1992a34618c7a4"
-test-command "sudo goenv use 1.17.8"            "628121bce55eca109aa4aae8f6ffa010"
+test-command "sudo goenv use 1.17.8"            "3e1880a51ac2fd015223db2084751dff"
 test-command "sudo goenv install 1.17.8"        "5119f6686cf0257ff262145d61db303a"
 test-command "sudo goenv use 1.18"              "d38b90a90390b3756e1992a34618c7a4"
-test-command "goenv use 1.18"                   "1d7e424e4c311c2f67bf53c538367bb3"
+test-command "goenv use 1.18"                   "283676a4365f1a4252d867ceab29ee5e"
 test-command "sudo goenv install 1.19.1"        "58339c01166fbb80bfd20e08b801939e"
 test-command "sudo goenv install 1.18.1"        "cb2fd36806cd2ed911e63bbd9cdbd385"
 test-command "sudo goenv rm 1.18"               "48bacb95c998567dcb71c4c8d80f0580"

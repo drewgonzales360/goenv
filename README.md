@@ -1,6 +1,7 @@
 # goenv
 
 ![github workflow](https://github.com/drewgonzales360/goenv/actions/workflows/github-actions.yml/badge.svg)
+[![Go Reference](https://pkg.go.dev/badge/pkg.go.dev/drewgonzales360/goenv.svg)](https://pkg.go.dev/github.com/drewgonzales360/goenv)
 
 `goenv` is an small, simple binary that executes the [install instructions](https://go.dev/doc/install) on the Go website and manages several Go versions. `goenv` downloads and extracts go to `/usr/local/goenv/<VERSION>` and adds a symlink from `/usr/local/go -> /usr/local/goenv/<VERSION>` (by default). It was loosely inspired by [Dave Cheney's blog post](https://dave.cheney.net/2014/04/20/how-to-install-multiple-versions-of-go).
 
@@ -9,38 +10,32 @@
 Calling `goenv` without any arguments will print out a helpful block of text, but here are a few useful examples. Note that installing 1.14 will install 1.14, even if 1.14.5 is the latest patch version.
 
 ```bash
-$ goenv
-NAME:
-   goenv - Manages multiple Go versions. See https://go.dev/dl for available versions.
+# Helpful list of commands
+❯ goenv
+Usage:
+   [command]
 
-USAGE:
-   goenv <command> [version]
+Available Commands:
+  config      Print out the current config
+  install     Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.
+  list        List all installed available Go versions.
+  uninstall   Uninstall a Go version.
+  use         Switch the current Go version to use whichever version in specified and installed.
 
-VERSION:
-   v0.3.0+7a5bcdd
+Flags:
+  -h, --help      help for this command
+  -v, --version   version for this command
 
-AUTHOR:
-   Drew Gonzales <github.com/drewgonzales360>
-
-COMMANDS:
-   install, i     Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.
-   uninstall, rm  Uninstall a Go version
-   use, u         Use a Go version
-   list, ls, l    List available Go versions
-   config, c      Prints the current config.
-
-GLOBAL OPTIONS:
-   --help, -h     show help (default: false)
-   --version, -v  print the version (default: false)
+Use " [command] --help" for more information about a command.
 
 # Install and use a go version
-$ goenv i 1.17
+$ goenv install 1.17
 ✅ Downloaded and validated Go 1.17
 ✅ Extracted package
 😎 Using go version go1.17 darwin/amd64
 
 # Use an installed version. This will fail if you don't have it installed.
-$ goenv u 1.19
+$ goenv use 1.19
 😎 Using go version go1.19 darwin/amd64
 
 # Removes an installed version and switches to another one if available
@@ -66,7 +61,7 @@ To install goenv, follow the steps below. Older releases are in the [Releases pa
 
 ```bash
 # Step 1: Download Goenv for your unix based system and add it to /usr/local/bin
-curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/v0.3.0/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.3.0.tar.gz" | sudo tar -xzv -C /usr/local/bin
+curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/v0.3.1/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.3.1.tar.gz" | sudo tar -xzv -C /usr/local/bin
 
 # Step 2: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH
 export PATH=/usr/local/go/bin:PATH

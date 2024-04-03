@@ -1,3 +1,5 @@
+package pkg_test
+
 // ///////////////////////////////////////////////////////////////////////
 // Copyright 2024 Drew Gonzales
 //
@@ -13,8 +15,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // ///////////////////////////////////////////////////////////////////////
-package pkg_test
-
 import (
 	"path"
 	"testing"

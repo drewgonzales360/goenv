@@ -1,3 +1,5 @@
+package main
+
 // ///////////////////////////////////////////////////////////////////////
 // Copyright 2024 Drew Gonzales
 //
@@ -13,8 +15,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // ///////////////////////////////////////////////////////////////////////
-package main
-
 import (
 	"fmt"
 	"os"
@@ -39,7 +39,7 @@ func main() {
 	installCmd := &cobra.Command{
 		Use:     "install",
 		Short:   "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
-		Example: fmt.Sprintf("ex: %s install 1.19.1", appName),
+		Example: fmt.Sprintf("  ex: %s install 1.19.1", appName),
 		Aliases: []string{"i"},
 		RunE:    cmd.InstallCommand,
 		Args:    cmd.ValidateVersionArg,
@@ -49,7 +49,7 @@ func main() {
 	uninstallCmd := &cobra.Command{
 		Use:     "uninstall",
 		Short:   "Uninstall a Go version.",
-		Example: fmt.Sprintf("ex: %s uninstall 1.17", appName),
+		Example: fmt.Sprintf("  ex: %s uninstall 1.17", appName),
 		Aliases: []string{"rm"},
 		RunE:    cmd.UninstallCommand,
 		Args:    cmd.ValidateVersionArg,
@@ -59,7 +59,7 @@ func main() {
 	useCmd := &cobra.Command{
 		Use:     "use",
 		Short:   "Switch the current Go version to use whichever version in specified and installed.",
-		Example: fmt.Sprintf("ex: %s use 1.18", appName),
+		Example: fmt.Sprintf("  ex: %s use 1.18", appName),
 		Aliases: []string{"u"},
 		RunE:    cmd.UseCommand,
 		Args:    cmd.ValidateVersionArg,
@@ -88,9 +88,10 @@ func main() {
 
 	rootCmd := &cobra.Command{Version: Semver}
 	rootCmd.AddCommand(installCmd, uninstallCmd, useCmd, listCmd, configCmd)
+	rootCmd.CompletionOptions.DisableDefaultCmd = true
+	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
 
-	err := rootCmd.Execute()
-	if err != nil {
+	if err := rootCmd.Execute(); err != nil {
 		os.Exit(1)
 	}
 }

@@ -1,3 +1,5 @@
+package cmd
+
 // ///////////////////////////////////////////////////////////////////////
 // Copyright 2024 Drew Gonzales
 //
@@ -13,8 +15,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 // ///////////////////////////////////////////////////////////////////////
-package cmd
-
 import (
 	"bytes"
 	"fmt"
@@ -44,7 +44,7 @@ const (
 	configSetByEnv     = "\t(set by environment variable)\n"
 )
 
-func ConfigCommand(cmd *cobra.Command, _ []string)  {
+func ConfigCommand(cmd *cobra.Command, _ []string) {
 	config := ReadConfig()
 	fmt.Print(config)
 	warnOnMissingPath(config)

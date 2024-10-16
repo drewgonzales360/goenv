@@ -17,26 +17,20 @@ package cmd
 // ///////////////////////////////////////////////////////////////////////
 import (
 	"fmt"
-	"path"
 
 	"github.com/Masterminds/semver/v3"
-	"github.com/spf13/cobra"
-
 	"github.com/drewgonzales360/goenv/internal/pkg"
+	"github.com/spf13/cobra"
 )
 
 func InstallCommand(cmd *cobra.Command, args []string) error {
 	version := args[0]
-	config := ReadConfig()
+	config := pkg.ReadConfig()
 
-	if err := install(config, version); err != nil {
-		return err
-	}
-
-	return nil
+	return install(config, version)
 }
 
-func install(config *Config, version string) error {
+func install(config *pkg.Config, version string) error {
 	if inaccessible := pkg.CheckRW(config.GoenvRootDirectory, config.GoenvInstallDirectory); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
@@ -51,7 +45,7 @@ func install(config *Config, version string) error {
 		return err
 	}
 
-	err = pkg.ExtractTarGz(tarballPath, path.Join(config.GoenvInstallDirectory, goVersion.String()))
+	err = pkg.ExtractTarGz(tarballPath, config.VersionInstallPath(goVersion))
 	if err != nil {
 		return fmt.Errorf("could not extract go: %w", err)
 	}

@@ -16,15 +16,17 @@ tar: build
 install:
 	@go install -ldflags="-X 'main.Semver=${SEMVER}-unreleased${BUILD_METADATA}'"
 
-# Runs a script to test basic, happy-path functionality inside the container
-test:
+docker:
 	@GOOS=linux go build -ldflags="-X 'main.Semver=${VERSION}'"
 	@docker build -t goenv-ubuntu .
+
+# Runs a script to test basic, happy-path functionality inside the container
+test: docker
 	docker run --rm -it -e GOENV_LOG=DEBUG --entrypoint /usr/local/bin/goenv-test goenv-ubuntu
 
 # Opens up a container to play around with goenv. Installing, removing, and switching go versions
 # is much safer in the container than it is on your local machine. It is short for interactive.
-it:
+it: docker
 	docker run --rm -it -e GOENV_LOG=DEBUG goenv-ubuntu
 
 # This creates a github release, but requires the caller to be properly authenticated

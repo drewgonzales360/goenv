@@ -1,5 +1,5 @@
 BUILD_METADATA=+$(shell git rev-parse --short HEAD)
-SEMVER=v0.3.2
+SEMVER=v0.3.3
 VERSION=${SEMVER}${BUILD_METADATA}
 GOOS?=$(shell uname | tr '[:upper:]' '[:lower:]')
 GOARCH?=$(shell uname -m | sed 's/x86_64/amd64/')

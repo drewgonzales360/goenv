@@ -24,7 +24,7 @@ import (
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/fatih/color"
-	"github.com/google/go-github/v60/github"
+	"github.com/google/go-github/v74/github"
 )
 
 const (

@@ -1,4 +1,4 @@
-FROM ubuntu:jammy
+FROM ubuntu:noble
 
 ENV PATH=/usr/local/go/bin:$PATH
 COPY goenv /usr/local/bin

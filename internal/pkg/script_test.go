@@ -37,19 +37,21 @@ func TestPrintInstallScript(t *testing.T) {
 			version:    semver.MustParse("1.20.5"),
 			want:       `curl -o /tmp/go1.20.5.darwin-arm64.tar.gz -sSL https://go.dev/dl/go1.20.5.darwin-arm64.tar.gz
 echo "94ad76b7e1593bb59df7fd35a738194643d6eed26a4181c94e3ee91381e40459 /tmp/go1.20.5.darwin-arm64.tar.gz" | sha256sum -c -
-mkdir /usr/local/goenv/1.20.5
+mkdir -p /usr/local/goenv/1.20.5
 tar --strip-components=1 -xzf /tmp/go1.20.5.darwin-arm64.tar.gz -C /usr/local/goenv/1.20.5
-ln -s /usr/local/goenv/1.20.5 /usr/local/go`,
+ln -s /usr/local/goenv/1.20.5 /usr/local/go
+export PATH=/usr/local/go/bin:$PATH`,
 		},
 		{
-			name:       "beepboop",
+			name:       "global",
 			rootDir:    "/usr/local/go",
-			installDir: "usr/local/go",
+			installDir: "/usr/local/go",
 			version:    semver.MustParse("1.20.5"),
 			want:       `curl -o /tmp/go1.20.5.darwin-arm64.tar.gz -sSL https://go.dev/dl/go1.20.5.darwin-arm64.tar.gz
 echo "94ad76b7e1593bb59df7fd35a738194643d6eed26a4181c94e3ee91381e40459 /tmp/go1.20.5.darwin-arm64.tar.gz" | sha256sum -c -
-mkdir usr/local/go
-tar --strip-components=1 -xzf /tmp/go1.20.5.darwin-arm64.tar.gz -C usr/local/go`,
+mkdir -p /usr/local/go
+tar --strip-components=1 -xzf /tmp/go1.20.5.darwin-arm64.tar.gz -C /usr/local/go
+export PATH=/usr/local/go/bin:$PATH`,
 		},
 	}
 	for _, tt := range tests {

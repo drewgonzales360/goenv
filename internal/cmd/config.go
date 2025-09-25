@@ -36,10 +36,6 @@ const (
 
 	GoEnvRootDirEnvVar    = "GOENV_ROOT_DIR"
 	GoEnvInstallDirEnvVar = "GOENV_INSTALL_DIR"
-
-	// Used to let the user know how a config variable was set.
-	configSetByDefault = "\t(default)\n"
-	configSetByEnv     = "\t(set by environment variable)\n"
 )
 
 func ConfigCommand(cmd *cobra.Command, _ []string) {

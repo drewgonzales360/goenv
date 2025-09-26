@@ -17,30 +17,36 @@ package pkg
 // ///////////////////////////////////////////////////////////////////////
 import (
 	"fmt"
-	"os"
+	"path"
 
-	"github.com/fatih/color"
+	"github.com/Masterminds/semver/v3"
 )
 
-func Success(mesg string) {
-	color.Green("😎 %s", mesg)
-}
+func InstallScript(rootDir string, installDir string, version *semver.Version) string {
+	url, checksum := getDownloadInfo(version)
+	localTarball := path.Join("/tmp", path.Base(url))
 
-func Error(mesg string) {
-	fmt.Fprintln(os.Stderr, color.RedString("😭 %s", mesg))
-}
+	installScriptTemplate := `curl -o %s -sSL %s
+echo "%s %s" | sha256sum -c -
+mkdir -p %s
+tar --strip-components=1 -xzf %s -C %s`
 
-func Info(mesg string) {
-	color.White("😃 %s", mesg)
-}
+	script := fmt.Sprintf(
+		installScriptTemplate,
+		localTarball,
+		url,
+		checksum,
+		localTarball,
+		installDir,
+		localTarball,
+		installDir,
+	)
 
-func Warn(mesg string) {
-	fmt.Fprintln(os.Stderr, color.YellowString("😥 %s", mesg))
-}
-
-func Debug(mesg string) {
-	logLevel := os.Getenv("GOENV_LOG")
-	if logLevel == "DEBUG" {
-		fmt.Fprintln(os.Stderr, color.BlueString("🤔 %s", mesg))
+	if rootDir != installDir {
+		script += fmt.Sprintf("\nln -s %s %s", installDir, rootDir)
 	}
+
+	script += fmt.Sprintf("\nexport PATH=%s/bin:$PATH", rootDir)
+
+	return script
 }

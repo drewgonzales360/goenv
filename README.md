@@ -61,7 +61,7 @@ To install goenv, follow the steps below. Older releases are in the [Releases pa
 
 ```bash
 # Step 1: Download Goenv for your unix based system and add it to /usr/local/bin
-curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/v0.3.3/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.3.3.tar.gz" | sudo tar -xzv -C /usr/local/bin
+curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/v0.4.0/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-v0.4.0.tar.gz" | sudo tar -xzv -C /usr/local/bin
 
 # Step 2: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH
 export PATH=/usr/local/go/bin:PATH

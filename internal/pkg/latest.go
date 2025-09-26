@@ -63,7 +63,7 @@ func CheckLatestGo() error {
 		return err
 	}
 
-	newReleaseData := []byte(fmt.Sprintf("%+v\n", releases))
+	newReleaseData := fmt.Appendf(nil, "%+v\n", releases)
 	defer func() {
 		err := os.WriteFile(releaseDataPath, newReleaseData, 0666)
 		if err != nil {

@@ -28,7 +28,7 @@ import (
 
 func UninstallCommand(cmd *cobra.Command, args []string) error {
 	version := args[0]
-	config := ReadConfig()
+	config := pkg.ReadConfig()
 
 	if err := uninstall(config, version); err != nil {
 		return err
@@ -37,7 +37,7 @@ func UninstallCommand(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func uninstall(config *Config, version string) error {
+func uninstall(config *pkg.Config, version string) error {
 	if inaccessible := pkg.CheckRW(config.GoenvRootDirectory, config.GoenvInstallDirectory); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}

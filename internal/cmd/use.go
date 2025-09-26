@@ -30,7 +30,7 @@ import (
 
 func UseCommand(cmd *cobra.Command, args []string) error {
 	version := args[0]
-	config := pkg.ReadConfig()
+	config := ReadConfig()
 
 	if err := use(config, version); err != nil {
 		return err
@@ -39,7 +39,7 @@ func UseCommand(cmd *cobra.Command, args []string) error {
 	return nil
 }
 
-func use(config *pkg.Config, version string) error {
+func use(config *Config, version string) error {
 	if inaccessible := pkg.CheckRW(config.GoenvRootDirectory, config.GoenvInstallDirectory); len(inaccessible) > 0 {
 		return fmt.Errorf(PermError, inaccessible)
 	}
@@ -61,7 +61,7 @@ func use(config *pkg.Config, version string) error {
 	} else {
 		// If the non-root user is calling, then we should check if it's in their path and warn if
 		// it isn't.
-		config.WarnOnMissingPath()
+		warnOnMissingPath(config)
 	}
 	output, err := exec.Command(goCmd, "version").Output()
 	if err != nil {
@@ -72,7 +72,7 @@ func use(config *pkg.Config, version string) error {
 	return nil
 }
 
-func link(config *pkg.Config, goVersion *semver.Version) error {
+func link(config *Config, goVersion *semver.Version) error {
 	// Remove the old symlink
 	if _, err := os.Stat(config.GoenvRootDirectory); err == nil {
 		if err = os.Remove(config.GoenvRootDirectory); err != nil {

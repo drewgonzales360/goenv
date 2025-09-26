@@ -25,7 +25,7 @@ import (
 )
 
 func ListCommand(cmd *cobra.Command, args []string) error {
-	config := pkg.ReadConfig()
+	config := ReadConfig()
 
 	versions, err := os.ReadDir(config.GoenvInstallDirectory)
 	if err != nil {

@@ -16,7 +16,6 @@ package pkg
 // limitations under the License.
 // ///////////////////////////////////////////////////////////////////////
 import (
-	"fmt"
 	"os"
 
 	"github.com/fatih/color"
@@ -27,7 +26,7 @@ func Success(mesg string) {
 }
 
 func Error(mesg string) {
-	fmt.Fprintln(os.Stderr, color.RedString("😭 %s", mesg))
+	color.Red("😭 %s", mesg)
 }
 
 func Info(mesg string) {
@@ -35,12 +34,12 @@ func Info(mesg string) {
 }
 
 func Warn(mesg string) {
-	fmt.Fprintln(os.Stderr, color.YellowString("😥 %s", mesg))
+	color.Yellow("😥 %s", mesg)
 }
 
 func Debug(mesg string) {
 	logLevel := os.Getenv("GOENV_LOG")
 	if logLevel == "DEBUG" {
-		fmt.Fprintln(os.Stderr, color.BlueString("🤔 %s", mesg))
+		color.Blue("🤔 %s", mesg)
 	}
 }

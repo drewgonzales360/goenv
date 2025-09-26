@@ -17,7 +17,9 @@ package cmd
 // ///////////////////////////////////////////////////////////////////////
 import (
 	"fmt"
+	"os"
 	"runtime"
+	"strings"
 
 	"github.com/Masterminds/semver/v3"
 	"github.com/spf13/cobra"
@@ -67,6 +69,14 @@ func PostRun(cmd *cobra.Command, _ []string) {
 	}
 }
 
+// warnOnMissingPath does a best effort to let you know that Go can't be called.
+func warnOnMissingPath(config *Config) {
+	bin := config.GoenvRootDirectory + "/bin"
+	if path := os.Getenv("PATH"); !strings.Contains(path, bin) {
+		pkg.Info(fmt.Sprintf("%s is not in your PATH", bin))
+		pkg.Info(fmt.Sprintf("export PATH=%s:$PATH", bin))
+	}
+}
 
 func darwinArm(version *semver.Version) bool {
 	return !(version.LessThan(semver.MustParse(goVersionDarwinARMIntroduced)) &&

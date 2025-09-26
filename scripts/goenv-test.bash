@@ -38,9 +38,6 @@ function test-command() {
     fi
 }
 
-echo "=============================================="
-echo "Starting Tests..."
-echo "=============================================="
 test-command "goenv install 1.18"               "5189677c7fdba8d0e1f26ae57898566a"
 test-command "sudo goenv install 1.18"          "d38b90a90390b3756e1992a34618c7a4"
 test-command "sudo goenv use 1.17.8"            "3e1880a51ac2fd015223db2084751dff"
@@ -54,4 +51,3 @@ test-command "sudo goenv rm 1.18.1"             "7eee8bee6ab2b5c84adead67b7ed056
 test-command "sudo goenv rm 1.17.8"             "f6d8e601d35578a4567982d8741afd08"
 test-command "sudo goenv rm 1.19.1"             "deb74a9475d1bd1e9fa234f78afe4f49"
 test-command "sudo goenv install 1.20"          "47ca9a018b21c73b6f001d06823899bd"
-test-command "goenv script 1.23.2 -g"           "b202ee3095109058cf418a4185576099"

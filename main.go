@@ -77,17 +77,6 @@ func main() {
 	listCmd.Flags().BoolP("stable", "s", false, "Print out only new stable releases.")
 	listCmd.Flags().BoolP("all", "a", false, "Print out all releases.")
 
-	scriptCmd := &cobra.Command{
-		Use:     "script",
-		Short:   "Print out the install script for a Go version.",
-		Example: fmt.Sprintf("  ex: %s script 1.19.1", appName),
-		Aliases: []string{"s"},
-		RunE:    cmd.ScriptCommand,
-		Args:    cmd.ValidateVersionArg,
-		PostRun: cmd.PostRun,
-	}
-	scriptCmd.Flags().BoolP("global", "g", false, "Ignore your goenv config and print out the script to install Go globally.")
-
 	configCmd := &cobra.Command{
 		Use:     "config",
 		Short:   "Print out the current config",
@@ -98,7 +87,7 @@ func main() {
 	}
 
 	rootCmd := &cobra.Command{Version: Semver}
-	rootCmd.AddCommand(installCmd, uninstallCmd, useCmd, listCmd, configCmd, scriptCmd)
+	rootCmd.AddCommand(installCmd, uninstallCmd, useCmd, listCmd, configCmd)
 	rootCmd.CompletionOptions.DisableDefaultCmd = true
 	rootCmd.SetHelpCommand(&cobra.Command{Hidden: true})
 

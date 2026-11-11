@@ -17,7 +17,7 @@ Usage:
 
 Available Commands:
   config      Print out the current config
-  install     Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.
+  install     Install a Go version. Usually in the form 1.18, 1.9, 1.17.8, or latest.
   list        List all installed available Go versions.
   uninstall   Uninstall a Go version.
   use         Switch the current Go version to use whichever version in specified and installed.
@@ -33,6 +33,9 @@ $ goenv install 1.17
 ✅ Downloaded and validated Go 1.17
 ✅ Extracted package
 😎 Using go version go1.17 darwin/amd64
+
+# Install the latest stable release
+$ goenv install latest
 
 # Use an installed version. This will fail if you don't have it installed.
 $ goenv use 1.19
@@ -63,9 +66,22 @@ To install goenv, follow the steps below. Older releases are in the [Releases pa
 # Step 1: Download Goenv for your unix based system and add it to /usr/local/bin
 curl -sSL "https://github.com/drewgonzales360/goenv/releases/download/XXLatestXX/goenv-$(uname | tr '[:upper:]' '[:lower:]')-$(uname -m | sed 's/x86_64/amd64/')-XXLatestXX.tar.gz" | sudo tar -xzv -C /usr/local/bin
 
-# Step 2: Add /usr/local/go/bin (or $GOENV_ROOT_DIR/bin) to PATH
-export PATH=/usr/local/go/bin:PATH
+# Step 2: Create a directory you own for goenv's files
+mkdir -p "$HOME/.local"
+
+# Step 3: Add the goenv configuration to your ~/.zshrc (or ~/.bashrc)
+cat >> ~/.zshrc <<'EOF'
+# goenv configuration
+export GOENV_INSTALL_DIR="$HOME/.local/goenv"
+export GOENV_ROOT_DIR="$HOME/.local/go"
+export PATH="$GOENV_ROOT_DIR/bin:$PATH"
+EOF
+
+# Step 4: Reload your shell
+source ~/.zshrc
 ```
+
+These variables are a required part of the installation. goenv creates a symlink at `GOENV_ROOT_DIR`, and the default `/usr/local` locations usually aren't writable without `sudo`.
 
 Install this binary _without_ `go install` so that it is managed independent of Go.
 

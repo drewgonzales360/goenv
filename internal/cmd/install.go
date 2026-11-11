@@ -35,6 +35,14 @@ func install(config *pkg.Config, version string) error {
 		return fmt.Errorf(PermError, inaccessible)
 	}
 
+	if version == "latest" {
+		latest, err := pkg.LatestStableVersion()
+		if err != nil {
+			return fmt.Errorf("could not resolve latest version: %w", err)
+		}
+		version = latest
+	}
+
 	goVersion, err := semver.NewVersion(version)
 	if err != nil {
 		return fmt.Errorf("could not parse %s: %w", version, err)

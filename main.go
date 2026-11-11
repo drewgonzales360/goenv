@@ -38,11 +38,11 @@ func main() {
 
 	installCmd := &cobra.Command{
 		Use:     "install",
-		Short:   "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8.",
-		Example: fmt.Sprintf("  ex: %s install 1.19.1", appName),
+		Short:   "Install a Go version. Usually in the form 1.18, 1.9, 1.17.8, or latest.",
+		Example: fmt.Sprintf("  ex: %s install 1.19.1\n  ex: %s install latest", appName, appName),
 		Aliases: []string{"i"},
 		RunE:    cmd.InstallCommand,
-		Args:    cmd.ValidateVersionArg,
+		Args:    cmd.ValidateInstallArg,
 		PostRun: cmd.PostRun,
 	}
 

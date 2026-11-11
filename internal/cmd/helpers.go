@@ -28,7 +28,7 @@ import (
 type GoEnvContextKey string
 
 const (
-	PermError string          = "you do not have access to %v"
+	PermError string          = "you do not have access to %v. Run with sudo, or set GOENV_INSTALL_DIR and GOENV_ROOT_DIR to directories you own"
 	config    GoEnvContextKey = "config"
 
 	// goVersionDarwinARMIntroduced is the version that the community started releasing binaries for
@@ -52,6 +52,15 @@ func ValidateVersionArg(cmd *cobra.Command, args []string) error {
 	}
 
 	return nil
+}
+
+// ValidateInstallArg is like ValidateVersionArg, but also accepts "latest".
+func ValidateInstallArg(cmd *cobra.Command, args []string) error {
+	if len(args) == 1 && args[0] == "latest" {
+		return nil
+	}
+
+	return ValidateVersionArg(cmd, args)
 }
 
 // PostRun checks for new versions of Goenv and Go.

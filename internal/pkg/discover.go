@@ -144,6 +144,22 @@ func toLooseGoVersion(v *semver.Version) string {
 	return urlVersion
 }
 
+// LatestStableVersion returns the newest stable Go release listed on go.dev, such as "1.25.3".
+func LatestStableVersion() (string, error) {
+	releases, err := getGoVersions(false)
+	if err != nil {
+		return "", err
+	}
+
+	for _, release := range releases {
+		if release.Stable {
+			return strings.TrimPrefix(release.Version, "go"), nil
+		}
+	}
+
+	return "", fmt.Errorf("go.dev did not list any stable releases")
+}
+
 // ListAvailableVersions reads all available versions of Go that can be installed. It queries go.dev
 // for what's available. By default, it'll return only the latest patches of the two most recent
 // minor versions. For example:
